@@ -1,12 +1,19 @@
 package oop.hw;
 
-import oop.hw.classes.House;
-import oop.hw.classes.Point;
-import oop.hw.classes.Time;
+import oop.hw.classes.*;
 
 public class Main {
     public static void main(String[] args) {
-        House house = new House(-2);
-        System.out.println(house);
+        Department department = new Department("IT");
+
+        Employee employeePetrov = new Employee("Петров", department);
+        Employee employeeKozlova = new Employee("Козлова", department);
+        Employee employeeSidorov = new Employee("Сидоров", department);
+
+        //department.setChief(employeeKozlova);
+
+        System.out.println(employeePetrov);
+        System.out.println(employeeKozlova);
+        System.out.println(employeeSidorov);
     }
 }
