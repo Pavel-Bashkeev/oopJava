@@ -1,7 +1,7 @@
 package oop.hw.classes;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EmployeeTest {
 
@@ -66,5 +66,26 @@ class EmployeeTest {
 
         assertEquals("Дмитрий Иванов", emp.getName());
         assertEquals(dept2, emp.getDepartment());
+    }
+
+    @Test
+    void testGetAllEmployees() {
+        Department it = new Department("IT");
+        Employee chief = new Employee("Иван Иванов", it);
+        it.setChief(chief);
+
+        Employee emp1 = new Employee("Петр Петров", it);
+
+        System.out.println(emp1.getDepartmentEmployees());
+
+        Department dept1 = new Department("Бухгалтерия");
+        Department dept2 = new Department("Юридический");
+        Employee emp = new Employee("Дмитрий Соколов", dept1);
+        Employee emp3 = new Employee("Дмитрий Соколов", dept2);
+
+        emp.setName("Дмитрий Иванов");
+
+        System.out.println(emp.getDepartmentEmployees());
+        System.out.println(emp3.getDepartmentEmployees());
     }
 }

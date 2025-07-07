@@ -1,12 +1,17 @@
 package oop.hw.classes;
 
+import java.util.List;
+
 public class Employee {
     String name;
     Department department;
 
     public Employee(String name, Department department) {
         this.name = name;
-        this.department = department;
+        if (department != null) {
+            this.department = department;
+            department.addEmployee(this);
+        }
     }
 
     @Override
@@ -26,8 +31,20 @@ public class Employee {
         return this.department;
     }
 
-    public void setDepartment(Department department) {
-        this.department = department;
+    public void setDepartment(Department newDepartment) {
+        if (this.department == newDepartment) {
+            return;
+        }
+
+        if (this.department != null) {
+            if (this.department.getAllEmployees().contains(this)) {
+                this.department.removeEmployee(this);
+            }
+        }
+        this.department = newDepartment;
+        if (newDepartment != null) {
+            this.department.addEmployee(this);
+        }
     }
 
     public String getName() {
@@ -36,5 +53,13 @@ public class Employee {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Employee> getDepartmentEmployees() {
+        if (department != null) {
+            return department.getAllEmployees();
+        }
+
+        return List.of();
     }
 }
