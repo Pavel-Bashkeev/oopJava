@@ -2,6 +2,8 @@ package oop.hw.classes;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,6 +14,18 @@ public class CityTest {
         City moscow = new City("Москва");
         assertEquals("Москва", moscow.getName());
         assertEquals("Москва", moscow.toString());
+    }
+
+    @Test
+    void testCreateCitiesWithRoutes() {
+        City volgograd = new City("Москва");
+        City peter = new City("Санкт-Петербург");
+
+        List<Route> routes = List.of(new Route(volgograd, 1000), new Route(peter, 400));
+        City moscow = new City("Москва", routes);
+
+        assertEquals("Москва", moscow.getName());
+        assertEquals("Москва -> {Москва: 1000, Санкт-Петербург: 400};", moscow.toString());
     }
 
     @Test

@@ -3,15 +3,11 @@ package oop.hw.classes;
 import static oop.hw.helpers.DeclensionWords.getDeclensionWord;
 
 public class House {
-    int numberOfFloors;
+    final int numberOfFloors;
     private final String[] FLOOR_FORMS = {"этажом", "этажами", "этажами"};
 
     public  House (int numberOfFloors) {
         this.numberOfFloors = numberOfFloors;
-    }
-
-    public House () {
-        this(0);
     }
 
     @Override

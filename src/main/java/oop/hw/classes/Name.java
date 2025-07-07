@@ -32,6 +32,18 @@ public class Name {
         return new Name(null, null, middleName);
     }
 
+    public Name firstNameInFIO(String firstName, String middleName, String lastName ) {
+        return new Name(firstName, middleName, lastName);
+    }
+
+    public Name firstNameAndLastName(String firstName, String lastName) {
+        return new Name(firstName, lastName, null);
+    }
+
+    public Name firstNameAndMiddleName(String firstName, String middleName) {
+        return new Name(firstName, null , middleName);
+    }
+
     @Override
     public String toString() {
         String rsString = "";

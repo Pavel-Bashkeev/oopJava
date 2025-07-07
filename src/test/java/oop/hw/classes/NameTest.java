@@ -52,4 +52,22 @@ class NameTest {
         Name name = new Name().onlyMiddleName("Николаевич");
         assertEquals("Николаевич", name.toString());
     }
+
+    @Test
+    void testFirstNameFIOMethod() {
+        Name name = new Name().firstNameInFIO("Александр", "Сергеевич", "Пушкин");
+        assertEquals("Александр Сергеевич Пушкин", name.toString());
+    }
+
+    @Test
+    void testFirstNameAndLastNameMethod() {
+        Name name = new Name().firstNameAndLastName("Христофор", "Бонифатьевич");
+        assertEquals("Христофор Бонифатьевич", name.toString());
+    }
+
+    @Test
+    void testFirstNameAndMiddleNameMethod() {
+        Name name = new Name().firstNameAndMiddleName("Христофор", "Сергеевич");
+        assertEquals("Христофор Сергеевич", name.toString());
+    }
 }

@@ -1,21 +1,19 @@
 package oop.hw.classes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class City {
     String name;
     List<Route> routes;
 
-    public City(String name) {
-        this.name = name;
-        this.routes = new ArrayList<>();
-    }
-
     public City(String name,  List<Route> routes) {
         this.name = name;
         this.routes = new ArrayList<>(routes);
+    }
+
+    public City(String name) {
+        this(name , new ArrayList<>());
     }
 
     public List<Route> getRoutes() {

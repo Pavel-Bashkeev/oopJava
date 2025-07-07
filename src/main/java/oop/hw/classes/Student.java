@@ -10,12 +10,14 @@ public class Student {
     List<Integer> grades;
 
     public Student(String name) {
-        this.name = name;
+        this(name , null);
     }
 
     public Student(String name, List<Integer> grades) {
         this.name = name;
-        this.grades = grades;
+        if (grades != null) {
+            this.grades = grades;
+        }
     }
 
     public String getName() {

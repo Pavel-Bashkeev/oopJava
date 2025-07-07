@@ -87,4 +87,41 @@ public class BrokenLineTest {
         assertEquals("Линия [{10;5}, {2;8}, {5;3}]", line1.toString());
         assertEquals("Линия [{1;5}, {2;-4}, {4;-8}, {5;3}]", line2.toString());
     }
+
+    @Test
+    void testEmptyPoints() {
+        BrokenLine line = new BrokenLine();
+
+        assertEquals("Линия []",  line.toString());
+    }
+
+    @Test
+    void testAddMultiplePoints() {
+        BrokenLine line = new BrokenLine();
+        line.addPoints(Arrays.asList(
+                new Point(1, 1),
+                new Point(2, 2)
+        ));
+
+        assertEquals(2, line.getPoints().size());
+        assertEquals("Линия [{1;1}, {2;2}]", line.toString());
+
+        line.addPoint(new Point(4, 1));
+
+        assertEquals(3, line.getPoints().size());
+        assertEquals("Линия [{1;1}, {2;2}, {4;1}]", line.toString());
+    }
+
+    @Test
+    void testSetPoints() {
+        BrokenLine line = new BrokenLine();
+        line.setPoints(Arrays.asList(
+                new Point(1, 1),
+                new Point(2, 2),
+                new Point(3, 3)
+        ));
+
+        assertEquals(3, line.getPoints().size());
+        assertEquals("Линия [{1;1}, {2;2}, {3;3}]", line.toString());
+    }
 }

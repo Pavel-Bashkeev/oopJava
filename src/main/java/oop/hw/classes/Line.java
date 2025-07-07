@@ -15,6 +15,7 @@ public class Line {
         this.endPoint = endLine.getEndPoint();
     }
 
+    @Override
     public String toString() {
         return String.format("Линия от %s до %s", this.startPoint.toString(), this.endPoint.toString());
     }

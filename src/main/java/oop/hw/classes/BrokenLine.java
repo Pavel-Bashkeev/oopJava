@@ -2,6 +2,7 @@ package oop.hw.classes;
 
 import oop.hw.helpers.ArrayToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BrokenLine {
@@ -9,6 +10,10 @@ public class BrokenLine {
 
     public BrokenLine(List<Point> points) {
         this.points = points;
+    }
+
+    public BrokenLine() {
+        this.points = new ArrayList<>();
     }
 
     @Override
