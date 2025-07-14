@@ -1,14 +1,17 @@
 package oop.hw.classes;
 
 public class Name {
-    String lastName;
-    String firstName;
-    String middleName;
+    private String lastName;
+    private final String firstName;
+    private String middleName;
 
     public Name(String lastName, String firstName, String middleName) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.middleName = middleName;
+        if (allFieldsEmpty(lastName, firstName, middleName)) {
+            throw new IllegalArgumentException("Хотя бы одно из полей (фамилия, имя или отчество) должно быть заполнено");
+        }
+        this.lastName = isNullOrEmpty(lastName) ? null : lastName;
+        this.firstName = isNullOrEmpty(firstName) ? null : firstName;
+        this.middleName = isNullOrEmpty(middleName) ? null : middleName;
     }
 
     public Name(String lastName, String firstName) {
@@ -19,30 +22,19 @@ public class Name {
         this(null, firstName, null);
     }
 
-    public Name() {
-        this(null, null, null);
+    private boolean allFieldsEmpty(String... fields) {
+        for (String field : fields) {
+            if (field != null && !field.trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public Name onlyLastName(String lastName) {
-        return new Name(lastName, null, null);
+    private boolean isNullOrEmpty(String s) {
+        return s == null || s.trim().isEmpty();
     }
 
-
-    public Name onlyMiddleName(String middleName) {
-        return new Name(null, null, middleName);
-    }
-
-    public Name firstNameInFIO(String firstName, String middleName, String lastName ) {
-        return new Name(firstName, middleName, lastName);
-    }
-
-    public Name firstNameAndLastName(String firstName, String lastName) {
-        return new Name(firstName, lastName, null);
-    }
-
-    public Name firstNameAndMiddleName(String firstName, String middleName) {
-        return new Name(firstName, null , middleName);
-    }
 
     @Override
     public String toString() {
@@ -74,10 +66,6 @@ public class Name {
 
     public String getMiddleName() {
         return middleName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     public void setLastName(String lastName) {

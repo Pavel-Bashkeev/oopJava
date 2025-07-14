@@ -2,6 +2,7 @@ package oop.hw.classes;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HouseTest {
     @Test
@@ -19,7 +20,6 @@ class HouseTest {
 
     @Test
     void testHouseToStringEdgeCases() {
-        assertEquals("Дом с 0 этажами", new House(0).toString());
         assertEquals("Дом с 11 этажами", new House(11).toString());
         assertEquals("Дом с 101 этажом", new House(101).toString());
     }
@@ -31,8 +31,11 @@ class HouseTest {
     }
 
     @Test
-    void testHouseToStringNegativeNumbers() {
-        assertEquals("Дом с -1 этажом", new House(-1).toString());
-        assertEquals("Дом с -12 этажами", new House(-12).toString());
+    void testZeroFloors() {
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> new House(0)
+        );
+        assertEquals("Количество этажей должно быть положительным числом", exception.getMessage());
     }
 }

@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BrokenLine {
-    List<Point> points;
+    private List<Point> points;
 
     public BrokenLine(List<Point> points) {
-        this.points = points;
+        this.points = new ArrayList<>(points);
     }
 
     public BrokenLine() {
-        this.points = new ArrayList<>();
+        this(new ArrayList<>());
     }
 
     @Override
@@ -22,11 +22,11 @@ public class BrokenLine {
     }
 
     public List<Point> getPoints() {
-        return points;
+        return new ArrayList<>(points);
     }
 
     public void setPoints(List<Point> points) {
-        this.points = points;
+        this.points = new ArrayList<>(points);
     }
 
     public void addPoint(Point point) {
@@ -35,5 +35,21 @@ public class BrokenLine {
 
     public void addPoints(List<Point> points) {
         this.points.addAll(points);
+    }
+
+    public double getLength() {
+        if (points.size() < 2) {
+            return 0.0;
+        }
+
+        double length = 0.0;
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            Point current = points.get(i);
+            Point next    = points.get(i + 1);
+            length += current.distanceTo(next);
+        }
+
+        return length;
     }
 }

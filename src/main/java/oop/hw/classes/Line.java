@@ -5,14 +5,14 @@ public class Line {
     private Point startPoint;
     private Point endPoint;
 
+
     public Line (Point startPoint, Point endPoint) {
         this.startPoint = startPoint;
         this.endPoint = endPoint;
     }
 
     public Line (Line startLine, Line endLine) {
-        this.startPoint = startLine.getStartPoint();
-        this.endPoint = endLine.getEndPoint();
+        this(startLine.getStartPoint(),  endLine.getEndPoint());
     }
 
     @Override
@@ -21,11 +21,11 @@ public class Line {
     }
 
     public Point getStartPoint() {
-        return this.startPoint;
+        return new Point(this.startPoint.getX(), this.startPoint.getY());
     }
 
     public Point getEndPoint() {
-        return this.endPoint;
+        return new  Point(this.endPoint.getX(), this.endPoint.getY());
     }
 
     public void setStartPoint(Point startPoint) {
@@ -44,5 +44,9 @@ public class Line {
     public void setEndPointDependent(Point endPoint) {
         this.endPoint.setX(endPoint.getX());
         this.endPoint.setY(endPoint.getY());
+    }
+
+    public double getLength () {
+        return this.startPoint.distanceTo(this.endPoint);
     }
 }

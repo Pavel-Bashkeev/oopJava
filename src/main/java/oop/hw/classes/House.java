@@ -7,6 +7,9 @@ public class House {
     private final String[] FLOOR_FORMS = {"этажом", "этажами", "этажами"};
 
     public  House (int numberOfFloors) {
+        if (numberOfFloors <= 0) {
+            throw new IllegalArgumentException("Количество этажей должно быть положительным числом");
+        }
         this.numberOfFloors = numberOfFloors;
     }
 

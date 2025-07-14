@@ -50,4 +50,11 @@ class LineTest {
         assertEquals("Линия от {10;20} до {23;8}", line1.toString());
         assertEquals("Линия от {5;10} до {10;20}", line2.toString());
     }
+
+    @Test
+    void testLengthCalculation() {
+        Line line = new Line(new Point(1, 1), new Point(10, 15));
+        assertEquals(16.7, line.getLength());
+    }
+
 }

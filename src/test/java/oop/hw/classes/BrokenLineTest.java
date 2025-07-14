@@ -124,4 +124,41 @@ public class BrokenLineTest {
         assertEquals(3, line.getPoints().size());
         assertEquals("Линия [{1;1}, {2;2}, {3;3}]", line.toString());
     }
+
+    @Test
+    void testGetLengthWithTwoPoints() {
+        BrokenLine brokenLine = new BrokenLine(List.of(
+                new Point(0, 0),
+                new Point(3, 4)
+        ));
+
+        assertEquals(5.0, brokenLine.getLength());
+    }
+
+    @Test
+    void testGetLengthWithMultiplePoints() {
+        BrokenLine brokenLine = new BrokenLine(List.of(
+                new Point(1, 1),
+                new Point(4, 5),
+                new Point(7, 9)
+        ));
+
+        assertEquals(10.0, brokenLine.getLength());
+    }
+
+    @Test
+    void testGetLengthAfterAddingPoints() {
+        BrokenLine brokenLine = new BrokenLine(List.of(
+                new Point(1, 1),
+                new Point(4, 5)
+        ));
+
+        double initialLength = brokenLine.getLength();
+        assertEquals(5.0, initialLength);
+
+        brokenLine.addPoint(new Point(7, 9));
+        double updatedLength = brokenLine.getLength();
+
+        assertEquals(10.0, updatedLength);
+    }
 }

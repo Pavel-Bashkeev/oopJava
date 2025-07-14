@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class StudentTest {
 
@@ -66,5 +68,17 @@ class StudentTest {
     void testEmptyGrades() {
         Student student = new Student("Саша");
         assertEquals("Саша: []", student.toString());
+    }
+
+    @Test
+    void testAvgAndIsExcellent() {
+        Student s1 = new Student("Вася", List.of(3,4,5,4));
+        Student s2 = new Student("Петя", List.of(5,5,5,5));
+
+        assertFalse(s1.isExcellentStudent());
+        assertTrue(s2.isExcellentStudent());
+
+        assertEquals(4.0, s1.getAvgGrade(), 0.01);
+        assertEquals(5.0, s2.getAvgGrade(), 0.01);
     }
 }

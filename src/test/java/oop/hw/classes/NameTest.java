@@ -1,7 +1,8 @@
 package oop.hw.classes;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class NameTest {
 
@@ -36,38 +37,18 @@ class NameTest {
     }
 
     @Test
-    void testEmptyName() {
-        Name name = new Name();
-        assertEquals("", name.toString());
+    void testEmptyNameThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> new Name(null, null, null));
     }
 
     @Test
-    void testOnlyLastNameMethod() {
-        Name name = new Name().onlyLastName("Петров");
-        assertEquals("Петров", name.toString());
+    void testEmptyStringsAreTreatedAsMissing() {
+        assertThrows(IllegalArgumentException.class, () -> new Name("", "", ""));
     }
 
     @Test
-    void testOnlyMiddleNameMethod() {
-        Name name = new Name().onlyMiddleName("Николаевич");
-        assertEquals("Николаевич", name.toString());
-    }
-
-    @Test
-    void testFirstNameFIOMethod() {
-        Name name = new Name().firstNameInFIO("Александр", "Сергеевич", "Пушкин");
-        assertEquals("Александр Сергеевич Пушкин", name.toString());
-    }
-
-    @Test
-    void testFirstNameAndLastNameMethod() {
-        Name name = new Name().firstNameAndLastName("Христофор", "Бонифатьевич");
-        assertEquals("Христофор Бонифатьевич", name.toString());
-    }
-
-    @Test
-    void testFirstNameAndMiddleNameMethod() {
-        Name name = new Name().firstNameAndMiddleName("Христофор", "Сергеевич");
-        assertEquals("Христофор Сергеевич", name.toString());
+    void testMixedEmptyAndValid() {
+        Name name = new Name("", "Анна", "");
+        assertEquals("Анна", name.toString());
     }
 }
