@@ -8,15 +8,12 @@ public class Employee {
 
     public Employee(String name, Department department) {
         this.name = name;
-        if (department != null) {
-            this.department = department;
-            department.addEmployee(this);
-        }
+        setDepartment(department);
     }
 
     @Override
     public String toString() {
-        if (this.department.getChief() != null && this.name.equalsIgnoreCase(this.department.getChief().getName())) {
+        if (this.department.getChief() != null && this.department.getChief() == this) {
             return this.name + " начальник отдела " + this.department.getNameDepartment();
         }
 
@@ -36,14 +33,17 @@ public class Employee {
             return;
         }
 
-        if (this.department != null) {
-            if (this.department.getAllEmployees().contains(this)) {
-                this.department.removeEmployee(this);
-            }
+        if (department != null && department.getChief() == this) {
+            department.setChief(null);
         }
-        this.department = newDepartment;
-        if (newDepartment != null) {
-            this.department.addEmployee(this);
+
+        if (department != null) {
+            department.removeEmployee(this);
+        }
+
+        department = newDepartment;
+        if (department != null) {
+            department.addEmployee(this);
         }
     }
 

@@ -5,27 +5,28 @@ public class Line {
     private Point startPoint;
     private Point endPoint;
 
+
     public Line (Point startPoint, Point endPoint) {
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
+        this.startPoint = new Point(startPoint.getX(), startPoint.getY());
+        this.endPoint = new Point(endPoint.getX(), endPoint.getY());
     }
 
-    public Line (Line startLine, Line endLine) {
-        this.startPoint = startLine.getStartPoint();
-        this.endPoint = endLine.getEndPoint();
+    public Line(Line startLine, Line endLine) {
+        this.startPoint = startLine.startPoint;
+        this.endPoint = endLine.endPoint;
     }
 
     @Override
     public String toString() {
-        return String.format("Линия от %s до %s", this.startPoint.toString(), this.endPoint.toString());
+        return String.format("Линия от %s до %s", this.startPoint, this.endPoint);
     }
 
     public Point getStartPoint() {
-        return this.startPoint;
+        return new Point(this.startPoint.getX(), this.startPoint.getY());
     }
 
     public Point getEndPoint() {
-        return this.endPoint;
+        return new  Point(this.endPoint.getX(), this.endPoint.getY());
     }
 
     public void setStartPoint(Point startPoint) {
@@ -44,5 +45,9 @@ public class Line {
     public void setEndPointDependent(Point endPoint) {
         this.endPoint.setX(endPoint.getX());
         this.endPoint.setY(endPoint.getY());
+    }
+
+    public double getLength () {
+        return this.startPoint.distanceTo(this.endPoint);
     }
 }
