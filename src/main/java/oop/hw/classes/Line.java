@@ -7,17 +7,18 @@ public class Line {
 
 
     public Line (Point startPoint, Point endPoint) {
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
+        this.startPoint = new Point(startPoint.getX(), startPoint.getY());
+        this.endPoint = new Point(endPoint.getX(), endPoint.getY());
     }
 
-    public Line (Line startLine, Line endLine) {
-        this(startLine.getStartPoint(),  endLine.getEndPoint());
+    public Line(Line startLine, Line endLine) {
+        this.startPoint = startLine.startPoint;
+        this.endPoint = endLine.endPoint;
     }
 
     @Override
     public String toString() {
-        return String.format("Линия от %s до %s", this.startPoint.toString(), this.endPoint.toString());
+        return String.format("Линия от %s до %s", this.startPoint, this.endPoint);
     }
 
     public Point getStartPoint() {

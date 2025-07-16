@@ -6,22 +6,16 @@ import java.util.List;
 public class Department {
     private String nameDepartment;
     private Employee chief;
-    private List<Employee> employees;
+    private final List<Employee> employees;
 
     public Department(String nameDepartment, Employee chief) {
         this.nameDepartment = nameDepartment;
-        this.chief = chief;
         this.employees = new ArrayList<>();
-        if (chief != null) {
-            this.employees.add(chief);
-            chief.department = this;
-        }
+        setChief(chief);
     }
 
     public Department(String nameDepartment) {
         this(nameDepartment, null);
-        this.nameDepartment = nameDepartment;
-        this.employees = new ArrayList<>();
     }
 
     public String getNameDepartment() {
@@ -36,19 +30,29 @@ public class Department {
         return this.chief;
     }
 
-    public void setChief(Employee chief) {
-        if (chief != null && !employees.contains(chief)) {
-            addEmployee(chief);
+    public void setChief(Employee newChief) {
+        if (this.chief == newChief) {
+            return;
         }
-        this.chief = chief;
+
+        if (this.chief != null) {
+            this.chief = null;
+        }
+
+        this.chief = newChief;
+
+        if (this.chief != null) {
+            if (this.chief.getDepartment() != this) {
+                this.chief.setDepartment(this);
+            }
+            if (!this.employees.contains(this.chief)) {
+                this.employees.add(this.chief);
+            }
+        }
     }
 
     public List<Employee> getAllEmployees() {
         return new ArrayList<>(this.employees);
-    }
-
-    public void setAllEmployees(List<Employee> employees) {
-        this.employees = employees;
     }
 
     public void addEmployee(Employee employee) {

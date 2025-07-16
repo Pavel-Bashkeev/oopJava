@@ -25,7 +25,7 @@ public class CityTest {
         City moscow = new City("Москва", routes);
 
         assertEquals("Москва", moscow.getName());
-        assertEquals("Москва -> {Москва: 1000, Санкт-Петербург: 400};", moscow.toString());
+        assertEquals("Москва -> [Москва: 1000, Санкт-Петербург: 400]", moscow.toString());
     }
 
     @Test
@@ -91,11 +91,11 @@ public class CityTest {
         F.addRoute(B, 700);
         F.addRoute(E, 700);
 
-        assertEquals("A -> {B: 500, D: 700, C: 300};", A.toString());
-        assertEquals("B -> {A: 500, C: 700};", B.toString());
-        assertEquals("C -> {B: 300, D: 700};", C.toString());
-        assertEquals("D -> {C: 700, E: 700, A: 700};", D.toString());
-        assertEquals("E -> {F: 700};", E.toString());
-        assertEquals("F -> {B: 700, E: 700};", F.toString());
+        assertEquals("A -> [B: 500, D: 700, C: 300]", A.toString());
+        assertEquals("B -> [A: 500, C: 700]", B.toString());
+        assertEquals("C -> [B: 300, D: 700]", C.toString());
+        assertEquals("D -> [C: 700, E: 700, A: 700]", D.toString());
+        assertEquals("E -> [F: 700]", E.toString());
+        assertEquals("F -> [B: 700, E: 700]", F.toString());
     }
 }

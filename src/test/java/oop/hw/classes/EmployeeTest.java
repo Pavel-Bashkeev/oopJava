@@ -2,6 +2,7 @@ package oop.hw.classes;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class EmployeeTest {
 
@@ -47,11 +48,11 @@ class EmployeeTest {
     @Test
     void testEmployeeToStringCaseInsensitive() {
         Department dept = new Department("Аналитика");
-        Employee chief = new Employee("АЛексей Новиков", dept);
+        Employee chief = new Employee("Алексей Новиков", dept);
         dept.setChief(chief);
-        Employee emp = new Employee("алексей новиков", dept);
+        Employee emp = new Employee("алексей новиковв", dept);
 
-        assertEquals("алексей новиков начальник отдела Аналитика",
+        assertEquals("алексей новиковв работает в отделе Аналитика, начальник которого Алексей Новиков",
                 emp.toString());
     }
 
@@ -87,5 +88,27 @@ class EmployeeTest {
 
         System.out.println(emp.getDepartmentEmployees());
         System.out.println(emp3.getDepartmentEmployees());
+    }
+
+    @Test
+    void testBecomeChief() {
+        Department dept = new Department("Отдел");
+        Employee emp = new Employee("Сотрудник", dept);
+
+        dept.setChief(emp);
+        assertEquals(emp, dept.getChief());
+        assertEquals("Сотрудник начальник отдела Отдел", emp.toString());
+    }
+
+    @Test
+    void testStopBeingChief() {
+        Department dept = new Department("Отдел");
+        Employee emp = new Employee("Бывший начальник", dept);
+        dept.setChief(emp);
+
+        dept.setChief(null);
+        assertNull(dept.getChief());
+        assertEquals("Бывший начальник работает в отделе Отдел, место начальника которого вакантно",
+                emp.toString());
     }
 }

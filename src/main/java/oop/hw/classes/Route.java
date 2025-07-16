@@ -6,7 +6,7 @@ public class Route {
 
     public Route(City destination, int cost) {
         this.destination = destination;
-        this.cost = cost;
+        setCost(cost);
     }
 
     public City getDestination() {
@@ -15,5 +15,17 @@ public class Route {
 
     public int getCost() {
         return cost;
+    }
+
+    public void setCost(int cost) {
+        if (cost <= 0) {
+            throw new IllegalArgumentException("Стоимость должна быть положительной");
+        }
+        this.cost = cost;
+    }
+
+    @Override
+    public String toString() {
+        return destination.getName() + ": " + cost;
     }
 }

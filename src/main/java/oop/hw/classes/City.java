@@ -32,29 +32,29 @@ public class City {
         this.name = name;
     }
 
-    public void addRoute(City city, int cost) {
-        this.routes.add(new Route(city, cost));
+    public void addRoute(City destination, int cost) {
+        if (destination == null) {
+            throw new IllegalArgumentException("Город назначения не может быть null");
+        }
+
+        for (Route route : routes) {
+            if (route.getDestination().equals(destination)) {
+                route.setCost(cost);
+                return;
+            }
+        }
+
+        routes.add(new Route(destination, cost));
     }
 
     public void removeRoute(City city) {
         routes.removeIf(route -> route.destination.equals(city));
     }
 
-    @Override
     public String toString() {
-        StringBuilder rsString = new StringBuilder(this.name);
-
-        if (!routes.isEmpty()) {
-            rsString.append(" -> {");
-            routes.forEach((route) -> {
-                rsString.append(route.getDestination().getName())
-                        .append(": ")
-                        .append(route.getCost())
-                        .append(", ");
-            });
-            rsString.delete(rsString.length() - 2, rsString.length());
-            rsString.append("};");
+        if (routes.isEmpty()) {
+            return name;
         }
-        return rsString.toString();
+        return name + " -> " + routes;
     }
 }

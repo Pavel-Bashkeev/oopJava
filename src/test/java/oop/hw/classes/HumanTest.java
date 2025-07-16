@@ -69,20 +69,16 @@ class HumanTest {
         Name nameGrandfather2 = new Name("Борисов", "Иван");
 
         Human grandfather2 = new Human(nameGrandfather2);
-        Human grandfather1 = new Human(nameGrandfather1);
-        Human ivan         = new Human(nameIvan);
+        Human ivan         = new Human(nameIvan, grandfather2);
         Human petr         = new Human(namePetr, ivan);
         Human boris        = new Human(nameBoris, petr);
 
-        grandfather1.setParent(grandfather2);
-        ivan.setParent(grandfather1);
 
         assertEquals("Человек с именем Борисов Иван Иванович", ivan.toString());
         assertEquals("Человек с именем Петров Петр Иванович", petr.toString());
         assertEquals("Человек с именем Петров Борис Петрович", boris.toString());
 
         assertNull(grandfather2.getParent());
-        assertEquals(grandfather1, ivan.getParent());
         assertEquals(ivan, petr.getParent());
     }
 

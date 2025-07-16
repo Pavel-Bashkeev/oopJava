@@ -3,8 +3,8 @@ package oop.hw.classes;
 public class Human {
     private static final String DEFAULT_PATRON_SUFFIX = "ович";
     private final        Name   name;
-    private final        int    height;
-    private              Human  parent;
+    private final int   height;
+    private final Human parent;
 
     private Human(Name name, int height, Human parent) {
         this.name   = name;
@@ -58,14 +58,6 @@ public class Human {
 
     public Human getParent() {
         return parent;
-    }
-
-    public void setParent(Human parent) {
-        if (parent == this) {
-            throw new IllegalArgumentException("Человек не может быть своим родителем");
-        }
-        this.parent = parent;
-        initFromParent();
     }
 
     public String getFirstName() {

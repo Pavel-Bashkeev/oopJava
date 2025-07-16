@@ -5,7 +5,7 @@ import oop.hw.helpers.ArrayToString;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Student {
+public final class Student {
     private String        name;
     private List<Integer> grades;
 
@@ -15,7 +15,7 @@ public class Student {
 
     public Student(String name, List<Integer> grades) {
         this.name   = name;
-        this.grades = grades != null ? new ArrayList<>(grades) : new ArrayList<>();
+        this.grades = processGrades(grades);
     }
 
     public String getName() {
@@ -27,15 +27,37 @@ public class Student {
     }
 
     public List<Integer> getGrades() {
-        return new ArrayList<>(grades);
+        return grades;
     }
 
     public void setGrades(List<Integer> grades) {
-        this.grades = grades;
+        this.grades = processGrades(grades);
     }
 
-    public void addGrade(Integer grade) {
+    public void addGrade(int grade) {
+        validateGrade(grade);
         this.grades.add(grade);
+    }
+
+    private void validateGrade(int grade) {
+        if (grade < 2 || grade > 5) {
+            throw new IllegalArgumentException("Оценка должна быть в диапазоне от 2 до 5");
+        }
+    }
+
+    private void validateGrades(List<Integer> grades) {
+        for (Integer grade : grades) {
+            validateGrade(grade);
+        }
+    }
+
+    private List<Integer> processGrades(List<Integer> grades) {
+        if (grades == null) {
+            return new ArrayList<>();
+        }
+
+        validateGrades(grades);
+        return grades;
     }
 
     @Override
@@ -48,10 +70,6 @@ public class Student {
             return 0;
         }
 
-        if (this.grades.size() == 1) {
-            return this.getGrades().getFirst();
-        }
-
         int sum = 0;
         for (Integer grade : this.grades) {
             sum += grade;
@@ -61,17 +79,15 @@ public class Student {
     }
 
     public boolean isExcellentStudent() {
-        if  (this.grades.isEmpty()) {
+        if (this.grades.isEmpty()) {
             return false;
         }
 
-        boolean isExcellent = true;
         for (Integer grade : grades) {
             if (grade != 5) {
-                isExcellent = false;
-                break;
+                return false;
             }
         }
-        return isExcellent;
+        return true;
     }
 }
