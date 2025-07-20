@@ -33,7 +33,7 @@ public class AutomaticGun extends Gun {
         }
 
         StringBuilder result = new StringBuilder();
-        int shotsFired = Math.min(getCountCartridge(), fireSpeed);
+        int shotsFired = Math.min(ammo(), fireSpeed);
 
         for (int i = 0; i < shotsFired; i++) {
             super.shoot();
@@ -50,7 +50,7 @@ public class AutomaticGun extends Gun {
         }
 
         StringBuilder result = new StringBuilder();
-        int totalShots = Math.min(getCountCartridge(), seconds * fireSpeed);
+        int totalShots = Math.min(ammo(), seconds * fireSpeed);
 
         for (int i = 0; i < totalShots; i++) {
             super.shoot();
@@ -63,8 +63,8 @@ public class AutomaticGun extends Gun {
 
     @Override
     public String toString() {
-        return "Автомат с " + getCountCartridge() + " " +
-                DeclensionWords.getDeclensionWord(getCountCartridge(),
+        return "Автомат с " + ammo() + " " +
+                DeclensionWords.getDeclensionWord(ammo(),
                         new String[]{"патроном", "патронами", "патронами"}) +
                 ", скорострельность " + fireSpeed + "/сек";
     }

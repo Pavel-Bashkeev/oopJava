@@ -1,5 +1,6 @@
 package oop.hw.classes;
 
+import oop.hw.classes.points.Point;
 import oop.hw.helpers.ArrayToString;
 
 import java.util.ArrayList;

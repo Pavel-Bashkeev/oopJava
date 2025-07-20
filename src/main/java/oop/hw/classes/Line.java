@@ -1,6 +1,8 @@
 
 package oop.hw.classes;
 
+import oop.hw.classes.points.Point;
+
 public class Line {
     private Point startPoint;
     private Point endPoint;

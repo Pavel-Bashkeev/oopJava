@@ -1,4 +1,4 @@
-package oop.hw.classes;
+package oop.hw.classes.points;
 
 
 sealed public class Point permits Point3D {

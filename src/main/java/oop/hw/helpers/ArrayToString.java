@@ -1,6 +1,6 @@
 package oop.hw.helpers;
 
-import oop.hw.classes.Point;
+import oop.hw.classes.points.Point;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package oop.hw.classes;
 
+import oop.hw.classes.points.Point;
+
 import java.util.List;
 
 public class Square {

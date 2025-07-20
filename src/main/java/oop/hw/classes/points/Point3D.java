@@ -1,4 +1,4 @@
-package oop.hw.classes;
+package oop.hw.classes.points;
 
 public final class Point3D extends Point {
     private int z;

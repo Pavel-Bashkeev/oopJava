@@ -1,7 +1,7 @@
 package oop.hw.classes.chapterTwo;
 
 import oop.hw.classes.BrokenLine;
-import oop.hw.classes.Point;
+import oop.hw.classes.points.Point;
 
 import java.util.List;
 

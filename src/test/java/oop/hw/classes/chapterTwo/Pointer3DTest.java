@@ -1,11 +1,11 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.Point;
-import oop.hw.classes.Point3D;
+import oop.hw.classes.points.Point;
+import oop.hw.classes.points.Point3D;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class Point3DTest {
+class Pointer3DTest {
 
     @Test
     void testConstructorWithCoordinates() {

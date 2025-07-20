@@ -10,7 +10,7 @@ class AutomaticGunTest {
         AutomaticGun gun = new AutomaticGun();
         assertEquals(30, gun.getMaxCartridge());
         assertEquals(30, gun.getFireSpeed());
-        assertEquals(0, gun.getCountCartridge());
+        assertEquals(0, gun.ammo());
     }
 
     @Test
@@ -35,7 +35,7 @@ class AutomaticGunTest {
         String result = gun.shoot();
         int lineCount = result.split("\n").length;
         assertEquals(3, lineCount);
-        assertEquals(7, gun.getCountCartridge()); // 10 - 3 = 7
+        assertEquals(7, gun.ammo()); // 10 - 3 = 7
     }
 
     @Test
@@ -46,7 +46,7 @@ class AutomaticGunTest {
         String result = gun.shootForSeconds(3);
         int lineCount = result.split("\n").length;
         assertEquals(15, lineCount); // 5 * 3 = 15
-        assertEquals(5, gun.getCountCartridge()); // 20 - 15 = 5
+        assertEquals(5, gun.ammo()); // 20 - 15 = 5
     }
 
     @Test
@@ -63,7 +63,7 @@ class AutomaticGunTest {
         String result = gun.shootForSeconds(1);
         int lineCount = result.split("\n").length;
         assertEquals(5, lineCount); // только 5 выстрелов вместо 10
-        assertEquals(0, gun.getCountCartridge());
+        assertEquals(0, gun.ammo());
     }
 
     @Test

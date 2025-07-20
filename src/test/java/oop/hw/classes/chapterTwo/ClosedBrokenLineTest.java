@@ -1,6 +1,6 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.Point;
+import oop.hw.classes.points.Point;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
