@@ -1,8 +1,7 @@
 package oop.hw.classes;
 
-import java.text.DecimalFormat;
 
-public class Point {
+sealed public class Point permits Point3D {
     private int x;
     private int y;
 

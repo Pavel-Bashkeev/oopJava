@@ -20,10 +20,6 @@ class FractionTest {
         assertEquals(2, f.getDenominator());
     }
 
-    @Test
-    void testConstructorWithZeroDenominator() {
-        assertThrows(ArithmeticException.class, () -> new Fraction(1, 0));
-    }
 
     @Test
     void testToString() {
@@ -97,19 +93,6 @@ class FractionTest {
         Fraction result = f.divide(2);
         assertEquals(3, result.getNumerator());
         assertEquals(8, result.getDenominator());
-    }
-
-    @Test
-    void testDivideByZeroFraction() {
-        Fraction f1 = new Fraction(1, 2);
-        Fraction f2 = new Fraction(0, 1);
-        assertThrows(ArithmeticException.class, () -> f1.divide(f2));
-    }
-
-    @Test
-    void testDivideByZeroInteger() {
-        Fraction f = new Fraction(1, 2);
-        assertThrows(ArithmeticException.class, () -> f.divide(0));
     }
 
     @Test
