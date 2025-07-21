@@ -1,5 +1,6 @@
 package oop.hw.classes;
 
+import oop.hw.classes.line.Line;
 import oop.hw.classes.points.Point;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

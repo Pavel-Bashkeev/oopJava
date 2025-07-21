@@ -1,21 +1,24 @@
-package oop.hw.classes.chapterTwo;
+package oop.hw.classes.weapon;
 
-import oop.hw.classes.Gun;
 import oop.hw.helpers.DeclensionWords;
 
 public class AutomaticGun extends Gun {
     private final int fireSpeed;
-    
+
     public AutomaticGun() {
-        this(30, 30);
+        this(30, 30, 30);
     }
 
     public AutomaticGun(int maxCartridge) {
-        this(maxCartridge, maxCartridge / 2);
+        this(maxCartridge, maxCartridge / 2, maxCartridge);
     }
 
     public AutomaticGun(int maxCartridge, int fireSpeed) {
-        super(maxCartridge);
+        this(maxCartridge, fireSpeed, maxCartridge);
+    }
+
+    public AutomaticGun(int maxCartridge, int fireSpeed, int initialAmmo) {
+        super(maxCartridge, initialAmmo);
         if (fireSpeed <= 0) {
             throw new IllegalArgumentException("Скорострельность должна быть положительной");
         }

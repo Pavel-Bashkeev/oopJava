@@ -1,5 +1,6 @@
 package oop.hw.classes.chapterTwo;
 
+import oop.hw.classes.line.ClosedBrokenLine;
 import oop.hw.classes.points.Point;
 import org.junit.jupiter.api.Test;
 

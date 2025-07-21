@@ -1,4 +1,4 @@
-package oop.hw.classes;
+package oop.hw.classes.arithmetic;
 
 public final class Fraction extends Number {
     private final int numerator;

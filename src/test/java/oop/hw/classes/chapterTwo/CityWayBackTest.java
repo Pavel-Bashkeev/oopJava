@@ -1,7 +1,8 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.City;
-import oop.hw.classes.Route;
+import oop.hw.classes.city.City;
+import oop.hw.classes.city.CityWayBack;
+import oop.hw.classes.city.Route;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

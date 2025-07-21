@@ -1,4 +1,4 @@
-package oop.hw.classes;
+package oop.hw.classes.weapon;
 
 abstract public class AbstractWeapon {
     private int ammo;
@@ -8,7 +8,7 @@ abstract public class AbstractWeapon {
         this.ammo = ammo;
     }
 
-    abstract String shoot();
+    abstract public String shoot();
 
     public int ammo() {
         return this.ammo;

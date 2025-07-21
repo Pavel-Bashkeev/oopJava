@@ -1,6 +1,8 @@
-package oop.hw.classes;
+package oop.hw.classes.meowableObject;
 
-public class Cat {
+import oop.hw.interfaces.Meowable;
+
+public class Cat implements Meowable {
     private String nickName;
 
     public Cat(String nickName) {
@@ -32,8 +34,8 @@ public class Cat {
         return nickName  + ": " + rsString;
     }
 
-    public String meow() {
-        return meow(0);
+    public void meow() {
+        System.out.println(this.meow(1));
     }
 
     @Override

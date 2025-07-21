@@ -1,4 +1,4 @@
-package oop.hw.classes;
+package oop.hw.classes.weapon;
 
 import oop.hw.helpers.DeclensionWords;
 

@@ -6,12 +6,16 @@ public class Parrot extends AbstractBird {
     private static final Random random = new Random();
     private final String phrase;
 
-    public Parrot(String phrase) {
-        super("Попугай");
+    public Parrot(String name, String phrase) {
+        super(name);
         if (phrase == null || phrase.trim().isEmpty()) {
             throw new IllegalArgumentException("Попугай должен иметь фразу для пения");
         }
         this.phrase = phrase.trim();
+    }
+
+    public Parrot(String phrase) {
+        this("Попугай", phrase);
     }
 
     @Override

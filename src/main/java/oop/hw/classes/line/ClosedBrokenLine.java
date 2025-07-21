@@ -1,6 +1,5 @@
-package oop.hw.classes.chapterTwo;
+package oop.hw.classes.line;
 
-import oop.hw.classes.BrokenLine;
 import oop.hw.classes.points.Point;
 
 import java.util.List;

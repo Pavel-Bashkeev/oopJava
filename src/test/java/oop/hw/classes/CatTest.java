@@ -1,8 +1,8 @@
 package oop.hw.classes;
 
+import oop.hw.classes.meowableObject.Cat;
 import org.junit.jupiter.api.Test;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CatTest {
@@ -28,12 +28,6 @@ class CatTest {
     void testToString() {
         Cat cat = new Cat("Барсик");
         assertEquals("Кот: Барсик", cat.toString());
-    }
-
-    @Test
-    void testMuteMeow() {
-        Cat cat = new Cat("Барсик");
-        assertEquals("Барсик: молчит или спит!", cat.meow());
     }
 
     @Test

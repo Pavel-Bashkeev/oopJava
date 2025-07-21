@@ -1,7 +1,4 @@
-package oop.hw.classes.chapterTwo;
-
-import oop.hw.classes.City;
-import oop.hw.classes.Route;
+package oop.hw.classes.city;
 
 import java.util.List;
 

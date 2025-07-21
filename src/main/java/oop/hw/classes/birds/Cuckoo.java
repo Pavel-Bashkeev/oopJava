@@ -9,6 +9,10 @@ public class Cuckoo extends AbstractBird {
         super("Кукушка");
     }
 
+    public Cuckoo(String name) {
+        super(name);
+    }
+
     @Override
     public void sing() {
         int count = 1 + random.nextInt(10);

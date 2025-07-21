@@ -1,10 +1,12 @@
 package oop.hw.classes;
 
+import oop.hw.classes.line.BrokenLine;
 import oop.hw.classes.points.Point;
+import oop.hw.interfaces.PolylineProvider;
 
 import java.util.List;
 
-public class Square {
+public class Square implements PolylineProvider {
     private Point startPointTopLeft;
     private double lengthOfSide;
 
