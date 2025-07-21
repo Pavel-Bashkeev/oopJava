@@ -1,7 +1,10 @@
 
-package oop.hw.classes;
+package oop.hw.classes.line;
 
-public class Line {
+import oop.hw.classes.points.Point;
+import oop.hw.interfaces.Measurable;
+
+public class Line implements Measurable {
     private Point startPoint;
     private Point endPoint;
 

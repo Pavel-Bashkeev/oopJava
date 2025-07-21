@@ -1,11 +1,13 @@
-package oop.hw.classes;
+package oop.hw.classes.line;
 
+import oop.hw.classes.points.Point;
 import oop.hw.helpers.ArrayToString;
+import oop.hw.interfaces.Measurable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrokenLine {
+public class BrokenLine implements Measurable {
     private List<Point> points;
 
     public BrokenLine(List<Point> points) {

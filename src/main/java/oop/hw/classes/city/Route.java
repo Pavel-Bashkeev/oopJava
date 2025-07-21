@@ -1,4 +1,4 @@
-package oop.hw.classes;
+package oop.hw.classes.city;
 
 public class Route {
     City destination;

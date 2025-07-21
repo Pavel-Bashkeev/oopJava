@@ -1,20 +1,31 @@
-package oop.hw.classes;
+package oop.hw.classes.student;
 
 import oop.hw.helpers.ArrayToString;
+import oop.hw.interfaces.GradeValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class Student {
-    private String        name;
+    private String name;
     private List<Integer> grades;
+    private GradeValidator gradeValidator;
 
     public Student(String name) {
-        this(name, new ArrayList<>());
+        this(name, grade -> true, new ArrayList<>());
+    }
+
+    public Student(String name, GradeValidator gradeValidator) {
+        this(name, gradeValidator, new ArrayList<>());
     }
 
     public Student(String name, List<Integer> grades) {
-        this.name   = name;
+        this(name, grade -> true, grades);
+    }
+
+    public Student(String name, GradeValidator gradeValidator, List<Integer> grades) {
+        this.name = name;
+        this.gradeValidator = gradeValidator;
         this.grades = processGrades(grades);
     }
 
@@ -39,9 +50,9 @@ public final class Student {
         this.grades.add(grade);
     }
 
-    private void validateGrade(int grade) {
-        if (grade < 2 || grade > 5) {
-            throw new IllegalArgumentException("Оценка должна быть в диапазоне от 2 до 5");
+    private void validateGrade(Integer grade) {
+        if (grade == null || !gradeValidator.isValid(grade)) {
+            throw new IllegalArgumentException("Оценка не соответствует заданным требованиям");
         }
     }
 

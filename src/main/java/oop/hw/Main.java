@@ -1,16 +1,17 @@
 package oop.hw;
 
-import oop.hw.classes.*;
-
-import java.util.Arrays;
-import java.util.List;
+import oop.hw.classes.line.Example;
+import oop.hw.classes.shooter.ExampleShooter;
+import oop.hw.classes.line.Example2_6;
+import oop.hw.classes.line.Example2_7;
+import oop.hw.classes.student.ExampleStudent;
 
 public class Main {
     public static void main(String[] args) {
-        Gun gun = new Gun(3);
-
-        for (int i = 0; i < 5; i++) {
-            System.out.println(gun.shoot());
-        }
+//        Example.demo();
+//        Example2_6.demo();
+//        Example2_7.demo();
+      //  ExampleShooter.demo();
+        ExampleStudent.demo();
     }
 }

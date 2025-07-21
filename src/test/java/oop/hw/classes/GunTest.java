@@ -1,5 +1,6 @@
 package oop.hw.classes;
 
+import oop.hw.classes.weapon.Gun;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +11,7 @@ class GunTest {
     void testInitialCapacityAndAmmo() {
         Gun gun = new Gun(7);
         assertEquals(7, gun.getMaxCartridge());
-        assertEquals(0, gun.getCountCartridge());
+        assertEquals(0, gun.ammo());
         assertFalse(gun.isReady());
     }
 
@@ -19,7 +20,7 @@ class GunTest {
         Gun gun = new Gun(5);
         int leftover = gun.reload(3);
         assertEquals(0, leftover);
-        assertEquals(3, gun.getCountCartridge());
+        assertEquals(3, gun.ammo());
         assertTrue(gun.isReady());
     }
 
@@ -28,7 +29,7 @@ class GunTest {
         Gun gun = new Gun(4);
         int leftover = gun.reload(6);
         assertEquals(2, leftover);
-        assertEquals(4, gun.getCountCartridge());
+        assertEquals(4, gun.ammo());
     }
 
     @Test
@@ -43,7 +44,7 @@ class GunTest {
         gun.reload(5);
         int unloaded = gun.unload();
         assertEquals(5, unloaded);
-        assertEquals(0, gun.getCountCartridge());
+        assertEquals(0, gun.ammo());
         assertFalse(gun.isReady());
     }
 

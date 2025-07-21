@@ -1,4 +1,4 @@
-package oop.hw.classes;
+package oop.hw.classes.city;
 
 import java.util.ArrayList;
 import java.util.List;
