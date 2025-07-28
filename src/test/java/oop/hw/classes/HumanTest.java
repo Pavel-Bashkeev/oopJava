@@ -1,5 +1,7 @@
 package oop.hw.classes;
 
+import ru.bashkeev.city.Human;
+import ru.bashkeev.city.Name;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

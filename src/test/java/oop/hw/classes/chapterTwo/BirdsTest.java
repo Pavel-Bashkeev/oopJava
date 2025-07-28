@@ -1,9 +1,9 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.birds.AbstractBird;
-import oop.hw.classes.birds.Cuckoo;
-import oop.hw.classes.birds.Parrot;
-import oop.hw.classes.birds.Sparrow;
+import ru.bashkeev.animals.birds.AbstractBird;
+import ru.bashkeev.animals.birds.Cuckoo;
+import ru.bashkeev.animals.birds.Parrot;
+import ru.bashkeev.animals.birds.Sparrow;
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

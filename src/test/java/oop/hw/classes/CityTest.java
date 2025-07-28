@@ -1,7 +1,7 @@
 package oop.hw.classes;
 
-import oop.hw.classes.city.City;
-import oop.hw.classes.city.Route;
+import ru.bashkeev.city.City;
+import ru.bashkeev.city.Route;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

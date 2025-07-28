@@ -1,9 +1,9 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.shapes.AbstractShare;
-import oop.hw.classes.shapes.CalculateTotalArea;
-import oop.hw.classes.shapes.Circle;
-import oop.hw.classes.shapes.Square;
+import ru.bashkeev.geometry.shapes.AbstractShare;
+import ru.bashkeev.geometry.shapes.CalculateTotalArea;
+import ru.bashkeev.geometry.shapes.Circle;
+import ru.bashkeev.geometry.shapes.Square;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

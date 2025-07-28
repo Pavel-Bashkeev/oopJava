@@ -1,6 +1,9 @@
 package oop.hw.classes;
 
 import org.junit.jupiter.api.Test;
+import ru.bashkeev.office.Department;
+import ru.bashkeev.office.Employee;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -9,7 +12,7 @@ class EmployeeTest {
     @Test
     void testEmployeeCreation() {
         Department dept = new Department("Логистика");
-        Employee emp = new Employee("Анна Сидорова", dept);
+        Employee   emp  = new Employee("Анна Сидорова", dept);
 
         assertEquals("Анна Сидорова", emp.getName());
         assertEquals(dept, emp.getDepartment());

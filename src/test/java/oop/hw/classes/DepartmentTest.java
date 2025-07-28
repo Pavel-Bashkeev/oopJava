@@ -1,6 +1,8 @@
 package oop.hw.classes;
 
 import org.junit.jupiter.api.Test;
+import ru.bashkeev.office.Department;
+import ru.bashkeev.office.Employee;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,8 +17,8 @@ public class DepartmentTest {
 
     @Test
     void testDepartmentWithChief() {
-        Employee chief = new Employee("Иван Иванов", null);
-        Department dept = new Department("Финансы", chief);
+        Employee   chief = new Employee("Иван Иванов", null);
+        Department dept  = new Department("Финансы", chief);
 
         assertEquals("Финансы", dept.getNameDepartment());
         assertEquals(chief, dept.getChief());

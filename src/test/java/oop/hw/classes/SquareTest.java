@@ -1,7 +1,8 @@
 package oop.hw.classes;
 
-import oop.hw.classes.line.BrokenLine;
-import oop.hw.classes.points.Point;
+import ru.bashkeev.geometry.line.BrokenLine;
+import ru.bashkeev.geometry.Square;
+import ru.bashkeev.geometry.points.Point;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -1,5 +1,6 @@
 package oop.hw.classes;
 
+import ru.bashkeev.city.House;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

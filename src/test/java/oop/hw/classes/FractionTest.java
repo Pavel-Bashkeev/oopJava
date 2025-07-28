@@ -1,6 +1,6 @@
 package oop.hw.classes;
 
-import oop.hw.classes.arithmetic.Fraction;
+import ru.bashkeev.arithmetic.Fraction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

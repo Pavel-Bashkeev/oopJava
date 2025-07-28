@@ -1,6 +1,6 @@
 package oop.hw.classes;
 
-import oop.hw.classes.student.Student;
+import ru.bashkeev.school.Student;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

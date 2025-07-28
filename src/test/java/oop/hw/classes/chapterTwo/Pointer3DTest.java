@@ -1,7 +1,7 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.points.Point;
-import oop.hw.classes.points.Point3D;
+import ru.bashkeev.geometry.points.Point;
+import ru.bashkeev.geometry.points.Point3D;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,8 @@
 package oop.hw.helpers;
 
 import org.junit.jupiter.api.Test;
+import ru.bashkeev.helpers.DeclensionWords;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DeclensionWordsTest {

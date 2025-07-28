@@ -1,9 +1,9 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.shapes.Circle;
-import oop.hw.classes.shapes.Rectangle;
-import oop.hw.classes.shapes.Square;
-import oop.hw.classes.shapes.Triangle;
+import ru.bashkeev.geometry.shapes.Circle;
+import ru.bashkeev.geometry.shapes.Rectangle;
+import ru.bashkeev.geometry.shapes.Square;
+import ru.bashkeev.geometry.shapes.Triangle;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

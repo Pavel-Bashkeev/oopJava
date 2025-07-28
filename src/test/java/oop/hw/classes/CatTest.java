@@ -1,6 +1,6 @@
 package oop.hw.classes;
 
-import oop.hw.classes.meowableObject.Cat;
+import ru.bashkeev.animals.cats.Cat;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

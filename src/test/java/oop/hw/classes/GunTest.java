@@ -1,6 +1,6 @@
 package oop.hw.classes;
 
-import oop.hw.classes.weapon.Gun;
+import ru.bashkeev.weapons.Gun;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

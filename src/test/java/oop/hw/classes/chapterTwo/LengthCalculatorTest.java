@@ -1,10 +1,10 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.line.BrokenLine;
-import oop.hw.classes.line.LengthCalculator;
-import oop.hw.classes.line.Line;
-import oop.hw.classes.points.Point;
-import oop.hw.interfaces.Measurable;
+import ru.bashkeev.geometry.line.BrokenLine;
+import ru.bashkeev.geometry.line.LengthCalculator;
+import ru.bashkeev.geometry.line.Line;
+import ru.bashkeev.geometry.points.Point;
+import ru.bashkeev.geometry.interfaces.Measurable;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 

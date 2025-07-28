@@ -1,7 +1,7 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.arithmetic.Arithmetic;
-import oop.hw.classes.arithmetic.Fraction;
+import ru.bashkeev.arithmetic.Arithmetic;
+import ru.bashkeev.arithmetic.Fraction;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

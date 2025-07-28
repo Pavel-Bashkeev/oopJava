@@ -1,7 +1,7 @@
 package oop.hw.classes.chapterTwo;
 
-import oop.hw.classes.line.ClosedBrokenLine;
-import oop.hw.classes.points.Point;
+import ru.bashkeev.geometry.line.ClosedBrokenLine;
+import ru.bashkeev.geometry.points.Point;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

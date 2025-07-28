@@ -1,6 +1,8 @@
 package oop.hw.classes;
 
 import org.junit.jupiter.api.Test;
+import ru.bashkeev.time.Time;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
