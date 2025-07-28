@@ -7,24 +7,24 @@ import java.util.List;
 public class ClosedBrokenLine extends BrokenLine {
 
     public ClosedBrokenLine(List<Point> points) {
-        super(points);
-        validateClosed(points);
+        super(validateAndClosed(points));
     }
 
-    private void validateClosed(List<Point> points) {
+    private static List<Point> validateAndClosed(List<Point> points) {
         if (points.size() < 3) {
             throw new IllegalArgumentException("Замкнутая ломаная должна содержать минимум 3 точки");
         }
 
         if (!points.getFirst().equals(points.getLast())) {
-            throw new IllegalArgumentException("Замкнутая ломаная должна начинаться и заканчиваться в одной точке");
+            points.add(new Point(points.getFirst().getX(), points.getLast().getY()));
         }
+
+        return points;
     }
 
     @Override
     public void setPoints(List<Point> points) {
-        validateClosed(points);
-        super.setPoints(points);
+        super.setPoints(validateAndClosed(points));
     }
 
     @Override

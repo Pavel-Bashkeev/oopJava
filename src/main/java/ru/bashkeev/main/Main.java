@@ -2,6 +2,7 @@ package ru.bashkeev.main;
 
 import ru.bashkeev.arithmetic.ExampleArithmetic;
 import ru.bashkeev.school.ExampleStudent;
+import ru.bashkeev.weapons.ExampleShooter;
 
 import static ru.bashkeev.arithmetic.PowerCalculator.calculatePower;
 

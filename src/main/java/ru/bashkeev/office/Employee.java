@@ -24,11 +24,11 @@ public class Employee {
         return this.name + " работает в отделе " + this.department.getNameDepartment() + ", место начальника которого вакантно";
     }
 
-    public Department getDepartment() {
+    Department getDepartment() {
         return this.department;
     }
 
-    public void setDepartment(Department newDepartment) {
+    void setDepartment(Department newDepartment) {
         if (this.department == newDepartment) {
             return;
         }

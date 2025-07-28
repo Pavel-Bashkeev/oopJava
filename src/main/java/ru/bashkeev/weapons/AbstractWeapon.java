@@ -1,7 +1,7 @@
 package ru.bashkeev.weapons;
 
 abstract public class AbstractWeapon {
-    private int ammo;
+    protected int ammo;
 
     public AbstractWeapon(int ammo) {
         validInitAmmo(ammo);
@@ -27,6 +27,6 @@ abstract public class AbstractWeapon {
     }
 
     private void validInitAmmo(int ammo) {
-        if (ammo < 0) throw new RuntimeException();
+        if (ammo < 0) throw new IllegalArgumentException("Количество патронов не может быть отрицательным");
     }
 }

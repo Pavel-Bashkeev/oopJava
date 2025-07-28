@@ -37,12 +37,13 @@ public class Gun extends AbstractWeapon {
     }
 
     public boolean isReady() {
-        return ammo() > 0;
+        return ammo > 0;
     }
 
     @Override
     public String shoot() {
-        if (getAmmo()) {
+        if (ammo > 0) {
+            ammo--;
             return "Бах!";
         }
         return "Клац!";
@@ -53,16 +54,16 @@ public class Gun extends AbstractWeapon {
             throw new IllegalArgumentException("Нельзя зарядить отрицательное количество патронов");
         }
 
-        int availableSpace = maxCartridge - ammo();
+        int availableSpace = maxCartridge - ammo;
         int loaded = Math.min(countCartridge, availableSpace);
-        load(ammo() + loaded);
+        ammo += loaded;
 
         return countCartridge - loaded;
     }
 
     public int unload() {
-        int unloaded = ammo();
-        load(0);
+        int unloaded = ammo;
+        ammo = 0;
         return unloaded;
     }
 

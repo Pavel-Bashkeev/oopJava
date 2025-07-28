@@ -8,8 +8,8 @@ import java.util.List;
 
 public final class Student {
     private String name;
-    private List<Integer>  grades;
-    private GradeValidator gradeValidator;
+    private       List<Integer>  grades;
+    private final GradeValidator gradeValidator;
 
     public Student(String name) {
         this(name, grade -> true, new ArrayList<>());

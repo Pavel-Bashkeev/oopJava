@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class City {
-    private String name;
-    private List<Route> routes;
+    String name;
+    List<Route> routes;
 
     public City(String name, List<Route> routes) {
         this.name = name;

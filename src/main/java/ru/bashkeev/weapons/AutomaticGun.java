@@ -6,7 +6,7 @@ public class AutomaticGun extends Gun {
     private final int fireSpeed;
 
     public AutomaticGun() {
-        this(30, 30, 30);
+        this(30, 30, 0);
     }
 
     public AutomaticGun(int maxCartridge) {
@@ -14,7 +14,7 @@ public class AutomaticGun extends Gun {
     }
 
     public AutomaticGun(int maxCartridge, int fireSpeed) {
-        this(maxCartridge, fireSpeed, maxCartridge);
+        this(maxCartridge, fireSpeed, 0);
     }
 
     public AutomaticGun(int maxCartridge, int fireSpeed, int initialAmmo) {
@@ -31,36 +31,27 @@ public class AutomaticGun extends Gun {
 
     @Override
     public String shoot() {
-        if (!isReady()) {
-            return "Клац!";
-        }
-
-        StringBuilder result = new StringBuilder();
-        int shotsFired = Math.min(ammo(), fireSpeed);
-
-        for (int i = 0; i < shotsFired; i++) {
-            super.shoot();
-            if (i > 0) result.append("\n");
-            result.append("Бах!");
-        }
-
-        return result.toString();
+        return shootMultiple(Math.min(ammo, fireSpeed));
     }
 
     public String shootForSeconds(int seconds) {
         if (seconds <= 0) {
             throw new IllegalArgumentException("Количество секунд должно быть положительным");
         }
+        return shootMultiple(Math.min(ammo, seconds * fireSpeed));
+    }
+
+    private String shootMultiple(int shots) {
+        if (ammo == 0) {
+            return "Клац!";
+        }
 
         StringBuilder result = new StringBuilder();
-        int totalShots = Math.min(ammo(), seconds * fireSpeed);
-
-        for (int i = 0; i < totalShots; i++) {
-            super.shoot();
+        for (int i = 0; i < shots; i++) {
+            ammo--;
             if (i > 0) result.append("\n");
             result.append("Бах!");
         }
-
         return result.toString();
     }
 
