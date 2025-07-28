@@ -1,0 +1,32 @@
+package ru.bashkeev.weapons;
+
+abstract public class AbstractWeapon {
+    protected int ammo;
+
+    public AbstractWeapon(int ammo) {
+        validInitAmmo(ammo);
+        this.ammo = ammo;
+    }
+
+    abstract public String shoot();
+
+    public int ammo() {
+        return this.ammo;
+    }
+
+    public boolean getAmmo() {
+        if (this.ammo == 0) return false;
+        this.ammo--;
+        return true;
+    }
+
+    public int load(int ammo) {
+        validInitAmmo(ammo);
+        this.ammo = ammo;
+        return ammo;
+    }
+
+    private void validInitAmmo(int ammo) {
+        if (ammo < 0) throw new IllegalArgumentException("Количество патронов не может быть отрицательным");
+    }
+}

@@ -1,0 +1,76 @@
+package ru.bashkeev.weapons;
+
+import ru.bashkeev.helpers.DeclensionWords;
+
+public class Gun extends AbstractWeapon {
+    private final int maxCartridge;
+
+    public Gun(int maxCartridge) {
+        this(maxCartridge, 0);
+    }
+
+    public Gun(int maxCartridge, int initialAmmo) {
+        super(initialAmmo);
+        validInitMaxCartridge(maxCartridge);
+        validateInitialAmmo(initialAmmo, maxCartridge);
+        this.maxCartridge = maxCartridge;
+    }
+
+    private void validInitMaxCartridge(int maxCartridge) {
+        if (maxCartridge <= 0) {
+            throw new IllegalArgumentException("Максимальная вместимость должна быть положительной");
+        }
+
+    }
+
+    private void validateInitialAmmo(int initialAmmo, int maxCartridge) {
+        if (initialAmmo < 0) {
+            throw new IllegalArgumentException("Начальное количество патронов не может быть отрицательным");
+        }
+        if (initialAmmo > maxCartridge) {
+            throw new IllegalArgumentException("Начальное количество патронов не может превышать максимальную вместимость");
+        }
+    }
+
+    public int getMaxCartridge() {
+        return maxCartridge;
+    }
+
+    public boolean isReady() {
+        return ammo > 0;
+    }
+
+    @Override
+    public String shoot() {
+        if (ammo > 0) {
+            ammo--;
+            return "Бах!";
+        }
+        return "Клац!";
+    }
+
+    public int reload(int countCartridge) {
+        if (countCartridge < 0) {
+            throw new IllegalArgumentException("Нельзя зарядить отрицательное количество патронов");
+        }
+
+        int availableSpace = maxCartridge - ammo;
+        int loaded = Math.min(countCartridge, availableSpace);
+        ammo += loaded;
+
+        return countCartridge - loaded;
+    }
+
+    public int unload() {
+        int unloaded = ammo;
+        ammo = 0;
+        return unloaded;
+    }
+
+    @Override
+    public String toString() {
+        return "Пистолет с " + ammo() + " " +
+                DeclensionWords.getDeclensionWord(ammo(),
+                        new String[]{"патроном", "патронами", "патронами"});
+    }
+}
