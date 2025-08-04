@@ -1,10 +1,13 @@
 package ru.bashkeev.main;
 
 import ru.bashkeev.arithmetic.ExampleArithmetic;
+import ru.bashkeev.arithmetic.NumberDivider;
+import ru.bashkeev.network.DataReader;
 import ru.bashkeev.school.ExampleStudent;
 import ru.bashkeev.weapons.ExampleShooter;
 
 import static ru.bashkeev.arithmetic.PowerCalculator.calculatePower;
+import static ru.bashkeev.school.StudentRecovery.processStudents;
 
 import java.awt.Point;
 
@@ -15,23 +18,14 @@ public class Main {
 //        Example2_7.demo();
       //  ExampleShooter.demo();
         //ExampleStudent.demo();
-        try {
-            double result = calculatePower(args[0], args[1]);
-            System.out.println(args[0] + " в степени " + args[1] + " = " + result);
-        } catch (NumberFormatException e) {
-            System.out.println("Ошибка: оба аргумента должны быть целыми числами");
-        }
+        // DataReader.readAndPrintData();
 
-        ru.bashkeev.geometry.points.Point myPoint = new ru.bashkeev.geometry.points.Point(3,4);
-        Point awtPoint = new Point(3, 8);
+//        List<String> input  = Arrays.asList("10", "2", "5", "0", "abc", "3.5");
+//        List<Double> result = NumberDivider.divideFirstByNumbers(input);
+//
+//        System.out.println("Результаты деления:");
+//        result.forEach(System.out::println);
 
-        System.out.println("myPoint точка: " + myPoint);
-        System.out.println("Точка из java.awt: " + awtPoint);
-
-
-        System.out.println("Расстояние от точки myPoint до (0,0): " +
-                myPoint.distanceTo(new ru.bashkeev.geometry.points.Point(0, 0)));
-        System.out.println("Расстояние от AWT точки до (0,0): " +
-                awtPoint.distance(0, 0));
+        processStudents();
     }
 }
