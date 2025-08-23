@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public final class Student {
+public final class Student implements Comparable<Student> {
     private String name;
     private       List<Integer>  grades;
     private final GradeValidator gradeValidator;
@@ -116,5 +116,16 @@ public final class Student {
     @Override
     public int hashCode() {
         return Objects.hash(name, getAvgGrade());
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        double thisAvg = this.getAvgGrade();
+        double otherAvg = other.getAvgGrade();
+
+        if (Math.abs(thisAvg - otherAvg) < 0.001) {
+            return 0;
+        }
+        return thisAvg > otherAvg ? 1 : -1;
     }
 }

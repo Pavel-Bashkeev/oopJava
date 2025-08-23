@@ -1,22 +1,20 @@
-
 package ru.bashkeev.geometry.line;
 
 import ru.bashkeev.geometry.points.Point;
 import ru.bashkeev.geometry.interfaces.Measurable;
 
-public class Line implements Measurable {
-    private Point startPoint;
-    private Point endPoint;
+public class Line<T extends Point> implements Measurable, Cloneable {
+    private T startPoint;
+    private T endPoint;
 
-
-    public Line (Point startPoint, Point endPoint) {
-        this.startPoint = new Point(startPoint.getX(), startPoint.getY());
-        this.endPoint = new Point(endPoint.getX(), endPoint.getY());
+    public Line(T startPoint, T endPoint) {
+        this.startPoint = clonePoint(startPoint);
+        this.endPoint = clonePoint(endPoint);
     }
 
-    public Line(Line startLine, Line endLine) {
-        this.startPoint = startLine.startPoint;
-        this.endPoint = endLine.endPoint;
+    public Line(Line<T> startLine, Line<T> endLine) {
+        this.startPoint = startLine.getStartPoint();
+        this.endPoint = endLine.getEndPoint();
     }
 
     @Override
@@ -24,33 +22,33 @@ public class Line implements Measurable {
         return String.format("Линия от %s до %s", this.startPoint, this.endPoint);
     }
 
-    public Point getStartPoint() {
-        return new Point(this.startPoint.getX(), this.startPoint.getY());
+    public T getStartPoint() {
+        return clonePoint(startPoint);
     }
 
-    public Point getEndPoint() {
-        return new  Point(this.endPoint.getX(), this.endPoint.getY());
+    public T getEndPoint() {
+        return clonePoint(endPoint);
     }
 
-    public void setStartPoint(Point startPoint) {
-        this.startPoint = new Point(startPoint.getX(), startPoint.getY());
+    public void setStartPoint(T startPoint) {
+        this.startPoint = clonePoint(startPoint);
     }
 
-    public void setEndPoint(Point endPoint) {
-        this.endPoint = new Point(endPoint.getX(), endPoint.getY());
+    public void setEndPoint(T endPoint) {
+        this.endPoint = clonePoint(endPoint);
     }
 
-    public void setStartPointDependent(Point startPoint) {
+    public void setStartPointDependent(T startPoint) {
         this.startPoint.setX(startPoint.getX());
         this.startPoint.setY(startPoint.getY());
     }
 
-    public void setEndPointDependent(Point endPoint) {
+    public void setEndPointDependent(T endPoint) {
         this.endPoint.setX(endPoint.getX());
         this.endPoint.setY(endPoint.getY());
     }
 
-    public double getLength () {
+    public double getLength() {
         return this.startPoint.distanceTo(this.endPoint);
     }
 
@@ -59,7 +57,8 @@ public class Line implements Measurable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
 
-        Line other = (Line) obj;
+        @SuppressWarnings("unchecked")
+        Line<T> other = (Line<T>) obj;
 
         return (startPoint.equals(other.startPoint) && endPoint.equals(other.endPoint)) ||
                 (startPoint.equals(other.endPoint) && endPoint.equals(other.startPoint));
@@ -71,11 +70,23 @@ public class Line implements Measurable {
     }
 
     @Override
-    public Line clone() {
+    public Line<T> clone() {
         try {
-            return (Line) super.clone();
+            @SuppressWarnings("unchecked")
+            Line<T> cloned = (Line<T>) super.clone();
+            cloned.startPoint = this.getStartPoint();
+            cloned.endPoint = this.getEndPoint();
+            return cloned;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError("Line cloning failed", e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private T clonePoint(T point) {
+        if (point == null) {
+            return null;
+        }
+        return (T) point.clone();
     }
 }
