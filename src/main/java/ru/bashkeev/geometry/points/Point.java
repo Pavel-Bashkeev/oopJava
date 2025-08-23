@@ -1,7 +1,9 @@
 package ru.bashkeev.geometry.points;
 
 
-sealed public class Point permits Point3D {
+import java.util.Objects;
+
+sealed public class Point implements Cloneable permits Point3D {
     private int x;
     private int y;
 
@@ -41,5 +43,30 @@ sealed public class Point permits Point3D {
         double distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
         return Math.ceil(distance * 10) / 10;
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Point other)) {
+            return false;
+        }
+        return this.x == other.x && this.y == other.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
+    @Override
+    public Point clone() {
+        try {
+            return (Point) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Point cloning failed", e);
+        }
     }
 }

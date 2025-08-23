@@ -6,6 +6,7 @@ import ru.bashkeev.school.interfaces.GradeValidator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class Student {
     private String name;
@@ -101,5 +102,19 @@ public final class Student {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Student other)) return false;
+
+        return Objects.equals(name, other.name) &&
+                Double.compare(getAvgGrade(), other.getAvgGrade()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, getAvgGrade());
     }
 }

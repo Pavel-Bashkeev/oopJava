@@ -1,7 +1,6 @@
 package ru.bashkeev.city;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class City {
     String name;
@@ -51,10 +50,34 @@ public class City {
         routes.removeIf(route -> route.destination.equals(city));
     }
 
+    @Override
     public String toString() {
         if (routes.isEmpty()) {
             return name;
         }
         return name + " -> " + routes;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof City other)) return false;
+        return getDestinationNames().equals(other.getDestinationNames());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDestinationNames());
+    }
+
+    private Set<String> getDestinationNames() {
+        Set<String> names = new HashSet<>();
+        for (Route route : routes) {
+            City destination = route.getDestination();
+            if (destination != null) {
+                names.add(destination.getName());
+            }
+        }
+        return names;
     }
 }

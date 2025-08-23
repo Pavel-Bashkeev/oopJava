@@ -1,5 +1,7 @@
 package ru.bashkeev.arithmetic;
 
+import java.util.Objects;
+
 public final class Fraction extends Number {
     private final int numerator;
     private final int denominator;
@@ -22,7 +24,7 @@ public final class Fraction extends Number {
     public Fraction(int wholeNumber) {
         this(wholeNumber, 1);
     }
-    
+
     private static int nod(int a, int b) {
         return b == 0 ? a : nod(b, a % b);
     }
@@ -97,6 +99,32 @@ public final class Fraction extends Number {
 
     public int getDenominator() {
         return denominator;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Fraction other = (Fraction) obj;
+        return this.numerator == other.numerator && this.denominator == other.denominator;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numerator, denominator);
+    }
+
+    @Override
+    public Fraction clone() {
+        try {
+            return (Fraction) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Fraction cloning failed", e);
+        }
     }
 
     @Override

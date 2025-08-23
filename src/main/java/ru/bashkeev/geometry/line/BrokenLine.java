@@ -6,6 +6,7 @@ import ru.bashkeev.geometry.interfaces.Measurable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BrokenLine implements Measurable {
     private List<Point> points;
@@ -53,5 +54,39 @@ public class BrokenLine implements Measurable {
         }
 
         return length;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        BrokenLine other = (BrokenLine) obj;
+
+        if (this.points.size() != other.points.size()) {
+            int diff = Math.abs(this.points.size() - other.points.size());
+            if (diff > 1) return false;
+        }
+
+        List<Point> thisNormalized = normalizeForComparison(this.points);
+        List<Point> otherNormalized = normalizeForComparison(other.points);
+
+        return thisNormalized.equals(otherNormalized);
+    }
+
+    @Override
+    public int hashCode() {
+        List<Point> normalized = normalizeForComparison(points);
+        return Objects.hash(normalized);
+    }
+
+    protected List<Point> normalizeForComparison(List<Point> points) {
+        if (points.isEmpty()) return new ArrayList<>();
+
+        if (points.size() > 1 && points.getFirst().equals(points.getLast())) {
+            return new ArrayList<>(points.subList(0, points.size() - 1));
+        }
+
+        return new ArrayList<>(points);
     }
 }

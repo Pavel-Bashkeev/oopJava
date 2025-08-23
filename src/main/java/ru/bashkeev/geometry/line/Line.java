@@ -53,4 +53,29 @@ public class Line implements Measurable {
     public double getLength () {
         return this.startPoint.distanceTo(this.endPoint);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Line other = (Line) obj;
+
+        return (startPoint.equals(other.startPoint) && endPoint.equals(other.endPoint)) ||
+                (startPoint.equals(other.endPoint) && endPoint.equals(other.startPoint));
+    }
+
+    @Override
+    public int hashCode() {
+        return startPoint.hashCode() ^ endPoint.hashCode();
+    }
+
+    @Override
+    public Line clone() {
+        try {
+            return (Line) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Line cloning failed", e);
+        }
+    }
 }
