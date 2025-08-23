@@ -1,5 +1,6 @@
 package ru.bashkeev.school;
 
+import ru.bashkeev.exceptions.InvalidGradeException;
 import ru.bashkeev.helpers.ArrayToString;
 import ru.bashkeev.school.interfaces.GradeValidator;
 
@@ -52,7 +53,7 @@ public final class Student {
 
     private void validateGrade(Integer grade) {
         if (grade == null || !gradeValidator.isValid(grade)) {
-            throw new IllegalArgumentException("Оценка не соответствует заданным требованиям");
+            throw new InvalidGradeException("Неправильная оценка для студента " + name);
         }
     }
 
