@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 public class StudentRecovery {
+    private static final Random random = new Random();
+
     public static void processStudents() {
         List<String> studentParams = generateStudentParams();
         List<String> gradeParams = generateGradeParams();
@@ -17,8 +19,8 @@ public class StudentRecovery {
             try {
                 List<Student> students = convert(studentParams, List.of());
                 printStudents("Студенты созданы без оценок:", students);
-            } catch (InvalidGradeException | IllegalArgumentException ex) {
-                System.out.println("Неожиданная ошибка: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Неожиданная ошибка при создании студентов без оценок: " + ex.getMessage());
             }
         } catch (IllegalArgumentException e) {
             System.out.println("студента " + extractStudentName(e.getMessage()) + " создать невозможно");
@@ -33,56 +35,68 @@ public class StudentRecovery {
         }
 
         for (String name : constructorArgs) {
-            students.add(new Student(name, grade -> grade >= 0 && grade <= 50));
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException("Ошибка создания студента: " + name);
+            }
+            students.add(new Student(name, grade -> grade >= 2 && grade <= 5));
         }
 
-        if (addArgs == null || addArgs.isEmpty()) {
-            return students;
-        }
-
-        List<Integer> validGrades = new ArrayList<>();
-
-        for (String gradeStr : addArgs) {
-            try {
-                int grade = Integer.parseInt(gradeStr);
-                if (grade >= 1 && grade <= 5) {
-                    validGrades.add(grade);
-                } else {
-                    break;
-                }
-            } catch (NumberFormatException e) { }
-        }
-
-        if (!students.isEmpty()) {
-            for (Student student : students) {
-                for (Integer grade : validGrades) {
-                    student.addGrade(grade);
+        if (addArgs != null && !addArgs.isEmpty()) {
+            for (String gradeStr : addArgs) {
+                try {
+                    int grade = Integer.parseInt(gradeStr);
+                    if (grade < 2 || grade > 5) {
+                        throw new InvalidGradeException("Оценка " + grade + " недопустима");
+                    }
+                    for (Student student : students) {
+                        student.addGrade(grade);
+                    }
+                } catch (NumberFormatException e) {
+                    throw new InvalidGradeException("Неверный формат оценки: " + gradeStr);
                 }
             }
-        } else {
-            throw new InvalidGradeException("Обнаружены недопустимые оценки");
         }
 
         return students;
     }
 
-    private static void printStudents(String header, List<Student> students) {
-        System.out.println(header);
-        students.forEach(System.out::println);
-    }
-
     private static String extractStudentName(String errorMessage) {
-        if (errorMessage.contains("Ошибка создания студента")) {
-            return errorMessage.replace("Ошибка создания студента", "").trim();
+        if (errorMessage != null && errorMessage.contains("Ошибка создания студента")) {
+            return errorMessage.replace("Ошибка создания студента", "").replace(":", "").trim();
         }
         return "Неизвестный";
     }
 
     protected static List<String> generateStudentParams() {
-        return List.of("Иванов", "Петров", "Сидоров");
+        List<String> names = new ArrayList<>();
+        names.add("Иванов");
+        names.add("Петров");
+        names.add("Сидоров");
+
+        if (random.nextBoolean()) {
+            names.add("");
+        }
+
+        return names;
     }
 
     protected static List<String> generateGradeParams() {
-        return List.of("4", "5", "2", "5", "3", "6", "1", "5", "10", "5");
+        List<String> grades = new ArrayList<>();
+        grades.add("4");
+        grades.add("5");
+        grades.add("3");
+
+        if (random.nextBoolean()) {
+            grades.add("6");
+        }
+
+        return grades;
+    }
+
+    private static void printStudents(String header, List<Student> students) {
+        System.out.println(header);
+        for (Student student : students) {
+            System.out.println(student.getName() + ": " + student.getGrades());
+        }
     }
 }
