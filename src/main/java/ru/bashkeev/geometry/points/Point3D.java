@@ -25,20 +25,26 @@ public final class Point3D extends Point {
         return "{" + getX() + ";" + getY() + ";" + z + "}";
     }
 
-    public double distanceTo(Point3D pointTo) {
-        double dx = pointTo.getX() - this.getX();
-        double dy = pointTo.getY() - this.getY();
-        double dz = pointTo.z - this.z;
-        double distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
-
-        return Math.ceil(distance * 10) / 10;
+    @Override
+    public int hashCode() {
+        return super.hashCode() * 31 + z;
     }
 
     @Override
-    public double distanceTo(Point pointTo) {
-        if (pointTo instanceof Point3D) {
-            return distanceTo((Point3D) pointTo);
+    public Point3D clone() {
+        return (Point3D) super.clone();
+    }
+
+    @Override
+    public double distanceTo(Point other) {
+        if (other instanceof Point3D other3D) {
+            double dx = other3D.getX() - this.getX();
+            double dy = other3D.getY() - this.getY();
+            double dz = other3D.z - this.z;
+            return Math.sqrt(dx * dx + dy * dy + dz * dz);
         }
-        return super.distanceTo(pointTo);
+        double dx = other.getX() - this.getX();
+        double dy = other.getY() - this.getY();
+        return Math.sqrt(dx * dx + dy * dy);
     }
 }
