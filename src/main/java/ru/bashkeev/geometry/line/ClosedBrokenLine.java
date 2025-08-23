@@ -15,8 +15,11 @@ public class ClosedBrokenLine extends BrokenLine {
             throw new IllegalArgumentException("Замкнутая ломаная должна содержать минимум 3 точки");
         }
 
-        if (!points.getFirst().equals(points.getLast())) {
-            points.add(new Point(points.getFirst().getX(), points.getLast().getY()));
+        Point first = points.getFirst();
+        Point last = points.getLast();
+
+        if (!first.equals(last)) {
+            points.add(first.clone());
         }
 
         return points;
