@@ -9,8 +9,9 @@ public class Main implements Cloneable {
         List<Integer> ints = DataStream.of(strs)
                 .map(Integer::parseInt)
                 .map(x -> x / 10)
-                .map(x -> x * 10)
-                .filter(x -> x > 100)
+                .map(String::valueOf)
+                .filter(x -> x.length() > 2)
+                .map(Integer::parseInt)
                 .filter(x -> x > 150)
                 .collect(ArrayList::new, List::add);
         System.out.println("List<String> strs: " + ints);
@@ -22,12 +23,20 @@ public class Main implements Cloneable {
                 .collect(ArrayList::new, List::add);
         System.out.println("List<Integer> generatedInts: " + generatedInts);
 
+        String concatenated = DataStream.of(strs)
+                .map(Integer::parseInt)
+                .map(x -> x / 10)
+                .map(x -> x * 10)
+                .map(String::valueOf)
+                .reduce("", (a, b) -> a + b);
+        System.out.println("String concatenated: " + concatenated);
+
         Integer sum = DataStream.of(strs)
                 .map(Integer::parseInt)
                 .map(x -> x / 10)
                 .map(x -> x * 10)
                 .reduce(0, Integer::sum);
-        System.out.println("Reduce sum: " + sum);
+        System.out.println("Integer sum: " + sum);
     }
 
     @Override
@@ -42,15 +51,13 @@ public class Main implements Cloneable {
 
 class DataStream<T> {
     private Supplier<Iterator<T>> dataSupplier;
-    private List<Function>        functions  = new ArrayList<>();
-    private List<Predicate<T>>    predicates = new ArrayList<>();
 
     private DataStream(Supplier<Iterator<T>> dataSupplier) {
         this.dataSupplier = dataSupplier;
     }
 
     private DataStream(List<T> elements) {
-        this.dataSupplier = () -> elements.iterator();
+        this.dataSupplier = elements::iterator;
     }
 
     public static <T> DataStream<T> of(List<T> elements) {
@@ -61,58 +68,66 @@ class DataStream<T> {
         return new DataStream<>(dataSupplier);
     }
 
-    public <R> DataStream<R> map(Function<T, R> applier) {
-        functions.add(applier);
-        return (DataStream<R>) this;
+    public <R> DataStream<R> map(Function<T, R> mapper) {
+        return new DataStream<>(() -> new Iterator<R>() {
+            private final Iterator<T> it = dataSupplier.get();
+
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
+
+            @Override
+            public R next() {
+                return mapper.apply(it.next());
+            }
+        });
     }
 
     public DataStream<T> filter(Predicate<T> predicate) {
-        predicates.add(predicate);
-        return this;
+        return new DataStream<>(() -> new Iterator<T>() {
+            private final Iterator<T> it = dataSupplier.get();
+            private T nextElement = null;
+            private boolean hasNextElement = false;
+
+            @Override
+            public boolean hasNext() {
+                while (!hasNextElement && it.hasNext()) {
+                    T candidate = it.next();
+                    if (predicate.test(candidate)) {
+                        nextElement = candidate;
+                        hasNextElement = true;
+                    }
+                }
+                return hasNextElement;
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                hasNextElement = false;
+                return nextElement;
+            }
+        });
     }
 
     public <P> P collect(Supplier<P> creator, BiConsumer<P, T> putter) {
         P collection = creator.get();
-        processElements(element -> putter.accept(collection, element));
+        Iterator<T> iterator = dataSupplier.get();
+        while (iterator.hasNext()) {
+            putter.accept(collection, iterator.next());
+        }
         return collection;
     }
 
     public T reduce(T identity, BinaryOperator<T> accumulator) {
-        T[] resultHolder = (T[]) new Object[1];
-        resultHolder[0] = identity;
-
-        processElements(element ->
-                resultHolder[0] = accumulator.apply(resultHolder[0], element));
-
-        return resultHolder[0];
-    }
-
-    private void processElements(Consumer<T> action) {
+        T result = identity;
         Iterator<T> iterator = dataSupplier.get();
-
         while (iterator.hasNext()) {
-            T element = iterator.next();
-            Object processed = element;
-
-            for (Function function : functions) {
-                processed = function.apply(processed);
-            }
-
-            boolean passedAllFilters = true;
-            for (Predicate<T> predicate : predicates) {
-                @SuppressWarnings("unchecked")
-                T castedProcessed = (T) processed;
-                if (!predicate.test(castedProcessed)) {
-                    passedAllFilters = false;
-                    break;
-                }
-            }
-
-            if (passedAllFilters) {
-                @SuppressWarnings("unchecked")
-                T finalResult = (T) processed;
-                action.accept(finalResult);
-            }
+            result = accumulator.apply(result, iterator.next());
         }
+        return result;
     }
 }
