@@ -8,47 +8,47 @@ class NameTest {
 
     @Test
     void testFullName() {
-        Name name = new Name("Иванов", "Иван", "Иванович");
+        Name name = Name.builder().lastName("Иванов").firstName("Иван").middleName("Иванович").build();
         assertEquals("Иванов Иван Иванович", name.toString());
     }
 
     @Test
     void testWithoutMiddleName() {
-        Name name = new Name("Пушкин", "Александр");
+        Name name = Name.builder().lastName("Пушкин").middleName("Александр").build();
         assertEquals("Пушкин Александр", name.toString());
     }
 
     @Test
     void testOnlyFirstName() {
-        Name name = new Name("Клеопатра");
+        Name name = Name.builder().firstName("Клеопатра").build();
         assertEquals("Клеопатра", name.toString());
     }
 
     @Test
     void testOnlyLastName() {
-        Name name = new Name("Иванов", null, null);
+        Name name = Name.builder().lastName("Иванов").build();
         assertEquals("Иванов", name.toString());
     }
 
     @Test
     void testOnlyMiddleName() {
-        Name name = new Name(null, null, "Сергеевич");
+        Name name = Name.builder().middleName("Сергеевич").build();
         assertEquals("Сергеевич", name.toString());
     }
 
     @Test
     void testEmptyNameThrowsException() {
-        assertThrows(IllegalArgumentException.class, () -> new Name(null, null, null));
+        assertThrows(IllegalArgumentException.class, () -> Name.builder().build());
     }
 
     @Test
     void testEmptyStringsAreTreatedAsMissing() {
-        assertThrows(IllegalArgumentException.class, () -> new Name("", "", ""));
+        assertThrows(IllegalArgumentException.class, () -> Name.builder().build());
     }
 
     @Test
     void testMixedEmptyAndValid() {
-        Name name = new Name("", "Анна", "");
+        Name name = Name.builder().firstName("Анна").build();
         assertEquals("Анна", name.toString());
     }
 }
