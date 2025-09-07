@@ -2,6 +2,7 @@ package ru.bashkeev.geometry.line;
 
 import ru.bashkeev.geometry.points.Point;
 import org.junit.jupiter.api.Test;
+import ru.bashkeev.geometry.points.PointFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,9 +13,9 @@ public class BrokenLineTest {
     @Test
     void testBrokenLine() {
         // 1. Создать первую Ломаную, проходящую через точки {1;5}, {2;8}, {5;3}
-        Point p1 = new Point(1, 5);
-        Point p2 = new Point(2, 8);
-        Point p3 = new Point(5, 3);
+        Point p1 = PointFactory.getInstance().createPoint(1, 5);
+        Point p2 = PointFactory.getInstance().createPoint(2, 8);
+        Point p3 = PointFactory.getInstance().createPoint(5, 3);
         BrokenLine line = new BrokenLine(Arrays.asList(p1, p2, p3));
 
         assertEquals("Линия [{1;5}, {2;8}, {5;3}]",  line.toString());
@@ -23,17 +24,17 @@ public class BrokenLineTest {
     @Test
     void testBrokenLine2() {
         // 2. Создайте вторую Ломаную, чья первая и последняя Точка совпадает с таковыми у первой Ломаной, но в качестве середины имеет точки: {2,-5}, {4,-8}
-        Point p1 = new Point(1, 5);
-        Point p2 = new Point(2, 8);
-        Point p3 = new Point(5, 3);
+        Point p1 = PointFactory.getInstance().createPoint(1, 5);
+        Point p2 = PointFactory.getInstance().createPoint(2, 8);
+        Point p3 = PointFactory.getInstance().createPoint(5, 3);
         BrokenLine line = new BrokenLine(Arrays.asList(p1, p2, p3));
 
         List<Point> pointsLine = line.getPoints();
         Point startLine = pointsLine.getFirst();
         Point endLine = pointsLine.getLast();
 
-        Point p4 = new Point(2, -4);
-        Point p5 = new Point(4, -8);
+        Point p4 = PointFactory.getInstance().createPoint(2, -4);
+        Point p5 = PointFactory.getInstance().createPoint(4, -8);
 
         BrokenLine line2 = new BrokenLine(Arrays.asList(startLine, p4, p5, endLine));
 
@@ -43,17 +44,17 @@ public class BrokenLineTest {
 
     @Test
     void testDependentChange() {
-        Point p1 = new Point(1, 5);
-        Point p2 = new Point(2, 8);
-        Point p3 = new Point(5, 3);
+        Point p1 = PointFactory.getInstance().createPoint(1, 5);
+        Point p2 = PointFactory.getInstance().createPoint(2, 8);
+        Point p3 = PointFactory.getInstance().createPoint(5, 3);
         BrokenLine line = new BrokenLine(Arrays.asList(p1, p2, p3));
 
         List<Point> pointsLine = line.getPoints();
         Point startLine = pointsLine.getFirst();
         Point endLine = pointsLine.getLast();
 
-        Point p4 = new Point(2, -4);
-        Point p5 = new Point(4, -8);
+        Point p4 = PointFactory.getInstance().createPoint(2, -4);
+        Point p5 = PointFactory.getInstance().createPoint(4, -8);
 
         BrokenLine line2 = new BrokenLine(Arrays.asList(startLine, p4, p5, endLine));
 
@@ -68,15 +69,15 @@ public class BrokenLineTest {
 
     @Test
     void testIndependentLines() {
-        Point p1 = new Point(1, 5);
-        Point p2 = new Point(2, 8);
-        Point p3 = new Point(5, 3);
+        Point p1 = PointFactory.getInstance().createPoint(1, 5);
+        Point p2 = PointFactory.getInstance().createPoint(2, 8);
+        Point p3 = PointFactory.getInstance().createPoint(5, 3);
         BrokenLine line1 = new BrokenLine(Arrays.asList(p1, p2, p3));
 
-        Point p1Copy = new Point(p1.getX(), p1.getY());
-        Point p3Copy = new Point(p3.getX(), p3.getY());
-        Point p4 = new Point(2, -4);
-        Point p5 = new Point(4, -8);
+        Point p1Copy = PointFactory.getInstance().createPoint(p1.getX(), p1.getY());
+        Point p3Copy = PointFactory.getInstance().createPoint(p3.getX(), p3.getY());
+        Point p4 = PointFactory.getInstance().createPoint(2, -4);
+        Point p5 = PointFactory.getInstance().createPoint(4, -8);
         BrokenLine line2 = new BrokenLine(Arrays.asList(p1Copy, p4, p5, p3Copy));
 
         assertEquals("Линия [{1;5}, {2;8}, {5;3}]", line1.toString());
@@ -99,14 +100,14 @@ public class BrokenLineTest {
     void testAddMultiplePoints() {
         BrokenLine line = new BrokenLine();
         line.addPoints(Arrays.asList(
-                new Point(1, 1),
-                new Point(2, 2)
+                PointFactory.getInstance().createPoint(1, 1),
+                PointFactory.getInstance().createPoint(2, 2)
         ));
 
         assertEquals(2, line.getPoints().size());
         assertEquals("Линия [{1;1}, {2;2}]", line.toString());
 
-        line.addPoint(new Point(4, 1));
+        line.addPoint(PointFactory.getInstance().createPoint(4, 1));
 
         assertEquals(3, line.getPoints().size());
         assertEquals("Линия [{1;1}, {2;2}, {4;1}]", line.toString());
@@ -116,9 +117,9 @@ public class BrokenLineTest {
     void testSetPoints() {
         BrokenLine line = new BrokenLine();
         line.setPoints(Arrays.asList(
-                new Point(1, 1),
-                new Point(2, 2),
-                new Point(3, 3)
+                PointFactory.getInstance().createPoint(1, 1),
+                PointFactory.getInstance().createPoint(2, 2),
+                PointFactory.getInstance().createPoint(3, 3)
         ));
 
         assertEquals(3, line.getPoints().size());
@@ -128,8 +129,8 @@ public class BrokenLineTest {
     @Test
     void testGetLengthWithTwoPoints() {
         BrokenLine brokenLine = new BrokenLine(List.of(
-                new Point(0, 0),
-                new Point(3, 4)
+                PointFactory.getInstance().createPoint(0, 0),
+                PointFactory.getInstance().createPoint(3, 4)
         ));
 
         assertEquals(5.0, brokenLine.getLength());
@@ -138,9 +139,9 @@ public class BrokenLineTest {
     @Test
     void testGetLengthWithMultiplePoints() {
         BrokenLine brokenLine = new BrokenLine(List.of(
-                new Point(1, 1),
-                new Point(4, 5),
-                new Point(7, 9)
+                PointFactory.getInstance().createPoint(1, 1),
+                PointFactory.getInstance().createPoint(4, 5),
+                PointFactory.getInstance().createPoint(7, 9)
         ));
 
         assertEquals(10.0, brokenLine.getLength());
@@ -149,14 +150,14 @@ public class BrokenLineTest {
     @Test
     void testGetLengthAfterAddingPoints() {
         BrokenLine brokenLine = new BrokenLine(List.of(
-                new Point(1, 1),
-                new Point(4, 5)
+                PointFactory.getInstance().createPoint(1, 1),
+                PointFactory.getInstance().createPoint(4, 5)
         ));
 
         double initialLength = brokenLine.getLength();
         assertEquals(5.0, initialLength);
 
-        brokenLine.addPoint(new Point(7, 9));
+        brokenLine.addPoint(PointFactory.getInstance().createPoint(7, 9));
         double updatedLength = brokenLine.getLength();
 
         assertEquals(10.0, updatedLength);
