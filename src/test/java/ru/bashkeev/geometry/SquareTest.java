@@ -3,6 +3,7 @@ package ru.bashkeev.geometry;
 import ru.bashkeev.geometry.line.BrokenLine;
 import ru.bashkeev.geometry.points.Point;
 import org.junit.jupiter.api.Test;
+import ru.bashkeev.geometry.points.PointFactory;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ class SquareTest {
 
     @Test
     void testSquareCreationAndBrokenLine() {
-        Square square = new Square(new Point(5, 3), 23);
+        Square square = new Square(PointFactory.getInstance().createPoint(5, 3), 23);
 
         assertEquals("{5;3}", square.getTopLeft().toString());
         assertEquals(23.0, square.getSideLength(), 0.001);
@@ -35,7 +36,7 @@ class SquareTest {
 
     @Test
     void testSquareToString() {
-        Square square = new Square(new Point(5, 3), 23);
+        Square square = new Square(PointFactory.getInstance().createPoint(5, 3), 23);
         assertEquals("Квадрат в точке {5;3} со стороной 23.0", square.toString());
     }
 

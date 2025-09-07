@@ -6,7 +6,7 @@ public final class Fraction extends Number {
     private final int numerator;
     private final int denominator;
 
-    public Fraction(int numerator, int denominator) {
+    Fraction(int numerator, int denominator) {
         if (denominator == 0) {
             throw new ArithmeticException("Знаменатель не может быть 0");
         }
@@ -21,7 +21,7 @@ public final class Fraction extends Number {
         this.denominator = denominator / nod;
     }
 
-    public Fraction(int wholeNumber) {
+    Fraction(int wholeNumber) {
         this(wholeNumber, 1);
     }
 

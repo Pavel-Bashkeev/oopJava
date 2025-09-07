@@ -9,7 +9,7 @@ class HumanTest {
 
     @Test
     void testCleopatra() {
-        Name  name  = new Name("Клеопатра");
+        Name  name  = Name.builder().firstName("Клеопатра").build();
         Human human = new Human(name, 152);
 
         assertEquals("Человек с именем Клеопатра и ростом 152", human.toString());
@@ -17,7 +17,7 @@ class HumanTest {
 
     @Test
     void testPushkin() {
-        Name  name  = new Name("Пушкин", "Александр", "Сергеевич");
+        Name  name  = Name.builder().lastName("Пушкин").firstName("Александр").middleName("Сергеевич").build();
         Human human = new Human(name, 167);
 
         assertEquals("Человек с именем Пушкин Александр Сергеевич и ростом 167", human.toString());
@@ -25,7 +25,7 @@ class HumanTest {
 
     @Test
     void testMayakovsky() {
-        Name  name  = new Name("Маяковский", "Владимир", null);
+        Name  name  = Name.builder().lastName("Маяковский").firstName("Владимир").build();
         Human human = new Human(name, 189);
 
         assertEquals("Человек с именем Маяковский Владимир и ростом 189", human.toString());
@@ -39,7 +39,7 @@ class HumanTest {
 
     @Test
     void testHumanWithoutHeight() {
-        Name  name  = new Name("Маяковский", "Владимир");
+        Name  name  = Name.builder().lastName("Маяковский").firstName("Владимир").build();
         Human human = new Human(name);
 
         assertEquals("Человек с именем Маяковский Владимир", human.toString());
@@ -47,9 +47,9 @@ class HumanTest {
 
     @Test
     void testHumanWithParent() {
-        Name nameIvan   = new Name("Чудов", "Иван");
-        Name namePetrov = new Name("Чудов", "Петр");
-        Name nameBoris  = new Name("Борис");
+        Name nameIvan   = Name.builder().lastName("Чудов").firstName("Иван").build();
+        Name namePetrov = Name.builder().lastName("Чудов").firstName("Петр").build();
+        Name nameBoris  = Name.builder().firstName("Борис").build();
 
         Human personIvan  = new Human(nameIvan);
         Human personPetr  = new Human(namePetrov, personIvan);
@@ -62,11 +62,11 @@ class HumanTest {
 
     @Test
     void testHumanFamilyTree() {
-        Name nameIvan         = new Name("Иван");
-        Name namePetr         = new Name("Петров", "Петр");
-        Name nameBoris        = new Name("Борис");
-        Name nameGrandfather1 = new Name("Иван");
-        Name nameGrandfather2 = new Name("Борисов", "Иван");
+        Name nameIvan         = Name.builder().firstName("Иван").build();
+        Name namePetr         = Name.builder().lastName("Петров").firstName("Петр").build();
+        Name nameBoris        = Name.builder().firstName("Борис").build();
+        Name nameGrandfather1 = Name.builder().firstName("Иван").build();
+        Name nameGrandfather2 = Name.builder().lastName("Борисов").firstName("Иван").build();
 
         Human grandfather2 = new Human(nameGrandfather2);
         Human ivan         = new Human(nameIvan, grandfather2);
@@ -84,10 +84,15 @@ class HumanTest {
 
     @Test
     void testMyFathersFather() {
-        Human greatGrandfather = new Human(new Name("Смирнов", "Иван"));
-        Human grandfather = new Human(new Name("Иван"), greatGrandfather);
-        Human father = new Human(new Name("Петр"), grandfather);
-        Human son = new Human(new Name("Алексей"), father);
+        Name SmIvan = Name.builder().lastName("Смирнов").firstName("Иван").build();
+        Name Ivan = Name.builder().firstName("Иван").build();
+        Name Petr = Name.builder().firstName("Петр").build();
+        Name Alex = Name.builder().firstName("Алексей").build();
+
+        Human greatGrandfather = new Human(SmIvan);
+        Human grandfather = new Human(Ivan, greatGrandfather);
+        Human father = new Human(Petr, grandfather);
+        Human son = new Human(Alex, father);
 
         assertEquals("Смирнов", father.getLastName());
         assertEquals("Смирнов", son.getLastName());

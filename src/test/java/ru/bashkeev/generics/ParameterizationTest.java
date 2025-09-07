@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.bashkeev.geometry.line.Line;
 import ru.bashkeev.geometry.points.Point;
 import ru.bashkeev.geometry.points.Point3D;
+import ru.bashkeev.geometry.points.PointFactory;
 import ru.bashkeev.utils.BoxUtils;
 import ru.bashkeev.utils.BoxUtils3D;
 import ru.bashkeev.utils.LineUtils;
@@ -17,7 +18,7 @@ public class ParameterizationTest {
 
     @Test
     public void testShiftLineStartX() {
-        Line<Point> line = new Line<>(new Point(5, 10), new Point(15, 20));
+        Line<Point> line = new Line<>(PointFactory.getInstance().createPoint(5, 10), PointFactory.getInstance().createPoint(15, 20));
         LineUtils.shiftLineStartX(line);
 
         assertEquals(15, line.getStartPoint().getX());

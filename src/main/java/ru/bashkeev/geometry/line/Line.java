@@ -13,13 +13,21 @@ public class Line<T extends Point> implements Measurable, Cloneable {
     }
 
     public Line(Line<T> startLine, Line<T> endLine) {
-        this.startPoint = startLine.getStartPoint();
-        this.endPoint = endLine.getEndPoint();
+        this.startPoint = startLine.getOriginalStartPoint();
+        this.endPoint = endLine.getOriginalEndPoint();
     }
 
     @Override
     public String toString() {
         return String.format("Линия от %s до %s", this.startPoint, this.endPoint);
+    }
+
+    public T getOriginalStartPoint() {
+        return startPoint;
+    }
+
+    public T getOriginalEndPoint() {
+        return endPoint;
     }
 
     public T getStartPoint() {

@@ -7,12 +7,12 @@ sealed public class Point implements Cloneable permits Point3D {
     private int x;
     private int y;
 
-    public Point(int x, int y) {
+    Point(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public Point() {
+    Point() {
         this(0,0);
     }
 

@@ -1,25 +1,47 @@
 package ru.bashkeev.city;
 
 public class Name {
-    private String lastName;
+    private       String lastName;
     private final String firstName;
-    private String middleName;
+    private       String middleName;
 
-    public Name(String lastName, String firstName, String middleName) {
+    private Name(String lastName, String firstName, String middleName) {
         if (allFieldsEmpty(lastName, firstName, middleName)) {
             throw new IllegalArgumentException("Хотя бы одно из полей (фамилия, имя или отчество) должно быть заполнено");
         }
-        this.lastName = isNullOrEmpty(lastName) ? null : lastName;
-        this.firstName = isNullOrEmpty(firstName) ? null : firstName;
+        this.lastName   = isNullOrEmpty(lastName) ? null : lastName;
+        this.firstName  = isNullOrEmpty(firstName) ? null : firstName;
         this.middleName = isNullOrEmpty(middleName) ? null : middleName;
     }
 
-    public Name(String lastName, String firstName) {
-        this(lastName, firstName, null);
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public Name(String firstName) {
-        this(null, firstName, null);
+
+    public static class Builder {
+        private String lastName;
+        private String firstName;
+        private String middleName;
+
+        public Builder lastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder firstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder middleName(String middleName) {
+            this.middleName = middleName;
+            return this;
+        }
+
+        public Name build() {
+            return new Name(lastName, firstName, middleName);
+        }
     }
 
     private boolean allFieldsEmpty(String... fields) {

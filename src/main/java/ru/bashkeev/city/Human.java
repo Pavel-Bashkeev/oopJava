@@ -14,7 +14,7 @@ public class Human {
     }
 
     public Human(String name, int height) {
-        this(new Name(name), height, null);
+        this(Name.builder().firstName(name).build(), height, null);
     }
 
     public Human(Name name, int height) {
@@ -26,7 +26,7 @@ public class Human {
     }
 
     public Human(String name, Human parent) {
-        this(new Name(name), 0, parent);
+        this(Name.builder().firstName(name).build(), 0, parent);
     }
 
     public Human(Name name) {

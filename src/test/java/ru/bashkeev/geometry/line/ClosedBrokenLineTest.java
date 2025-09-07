@@ -2,6 +2,7 @@ package ru.bashkeev.geometry.line;
 
 import ru.bashkeev.geometry.points.Point;
 import org.junit.jupiter.api.Test;
+import ru.bashkeev.geometry.points.PointFactory;
 
 import java.util.List;
 
@@ -18,28 +19,28 @@ class ClosedBrokenLineTest {
     @Test
     void testSinglePointThrowsException() {
         assertThrows(IllegalArgumentException.class, () ->
-                new ClosedBrokenLine(List.of(new Point(0, 0))));
+                new ClosedBrokenLine(List.of(PointFactory.getInstance().createPoint(0, 0))));
     }
 
     @Test
     void testTwoPointsThrowsException() {
         assertThrows(IllegalArgumentException.class, () ->
-                new ClosedBrokenLine(List.of(new Point(0, 0), new Point(0, 0))));
+                new ClosedBrokenLine(List.of(PointFactory.getInstance().createPoint(0, 0), PointFactory.getInstance().createPoint(0, 0))));
     }
 
     @Test
     void testThreePointsValid() {
-        Point p1 = new Point(0, 0);
-        Point p2 = new Point(1, 0);
+        Point p1 = PointFactory.getInstance().createPoint(0, 0);
+        Point p2 = PointFactory.getInstance().createPoint(1, 0);
         assertDoesNotThrow(() ->
                 new ClosedBrokenLine(List.of(p1, p2, p1)));
     }
 
     @Test
     void testTriangleLength() {
-        Point p1 = new Point(0, 0);
-        Point p2 = new Point(3, 0);
-        Point p3 = new Point(0, 4);
+        Point p1 = PointFactory.getInstance().createPoint(0, 0);
+        Point p2 = PointFactory.getInstance().createPoint(3, 0);
+        Point p3 = PointFactory.getInstance().createPoint(0, 4);
         ClosedBrokenLine line = new ClosedBrokenLine(List.of(p1, p2, p3, p1));
 
         assertEquals(12.0, line.getLength()); // 3 + 4 + 5
@@ -47,9 +48,9 @@ class ClosedBrokenLineTest {
 
     @Test
     void testNotClosedLineThrowsException() {
-        Point p1 = new Point(0, 0);
-        Point p2 = new Point(1, 0);
-        Point p3 = new Point(1, 1);
+        Point p1 = PointFactory.getInstance().createPoint(0, 0);
+        Point p2 = PointFactory.getInstance().createPoint(1, 0);
+        Point p3 = PointFactory.getInstance().createPoint(1, 1);
 
         assertThrows(UnsupportedOperationException.class, () ->
                 new ClosedBrokenLine(List.of(p1, p2, p3)));
@@ -57,9 +58,9 @@ class ClosedBrokenLineTest {
 
     @Test
     void testSetPointsValidatesClosure() {
-        Point p1 = new Point(0, 0);
-        Point p2 = new Point(1, 0);
-        Point p3 = new Point(0, 1);
+        Point p1 = PointFactory.getInstance().createPoint(0, 0);
+        Point p2 = PointFactory.getInstance().createPoint(1, 0);
+        Point p3 = PointFactory.getInstance().createPoint(0, 1);
 
         ClosedBrokenLine line = new ClosedBrokenLine(List.of(p1, p2, p3, p1));
 
@@ -72,20 +73,20 @@ class ClosedBrokenLineTest {
 
     @Test
     void testAddPointsMaintainsClosure() {
-        Point p1 = new Point(0, 0);
-        Point p2 = new Point(1, 0);
-        Point p3 = new Point(0, 1);
+        Point p1 = PointFactory.getInstance().createPoint(0, 0);
+        Point p2 = PointFactory.getInstance().createPoint(1, 0);
+        Point p3 = PointFactory.getInstance().createPoint(0, 1);
 
         ClosedBrokenLine line = new ClosedBrokenLine(List.of(p1, p2, p3, p1));
-        line.addPoint(new Point(1, 1));
+        line.addPoint(PointFactory.getInstance().createPoint(1, 1));
         assertEquals(5, line.getPoints().size());
     }
 
     @Test
     void testToString() {
-        Point p1 = new Point(0, 0);
-        Point p2 = new Point(1, 0);
-        Point p3 = new Point(0, 1);
+        Point p1 = PointFactory.getInstance().createPoint(0, 0);
+        Point p2 = PointFactory.getInstance().createPoint(1, 0);
+        Point p3 = PointFactory.getInstance().createPoint(0, 1);
         ClosedBrokenLine line = new ClosedBrokenLine(List.of(p1, p2, p3, p1));
 
         String str = line.toString();

@@ -143,4 +143,37 @@ class FractionTest {
         Fraction result = f1.plus(f2).divide(f3).minus(5);
         assertEquals("(1/3 + 2/3) / 3/4 - 5 = -11/3", "(" + f1 + " + " + f2 + ") / " + f3 + " - 5 = " + result);
     }
+
+    @Test
+    void testSingletonGenerator() {
+        FractionGenerator g1 = FractionGenerator.getInstance();
+        FractionGenerator g2 = FractionGenerator.getInstance();
+
+        assertSame(g1, g2, "Генератор должен быть Singleton");
+    }
+
+    @Test
+    void testEqualFractionsShouldBeEqual() {
+        Fraction a = FractionGenerator.getInstance().createFraction(1, 2);
+        Fraction b = FractionGenerator.getInstance().createFraction(2, 4);
+
+        assertEquals(a, b, "Дроби 1/2 и 2/4 должны быть равны");
+        assertEquals(a.hashCode(), b.hashCode(), "Хэши равных дробей должны совпадать");
+    }
+
+    @Test
+    void testDifferentFractionsShouldNotBeEqual() {
+        Fraction a = FractionGenerator.getInstance().createFraction(1, 2);
+        Fraction b = FractionGenerator.getInstance().createFraction(2, 3);
+
+        assertNotEquals(a, b, "Дроби 1/2 и 2/3 не должны быть равны");
+    }
+
+    @Test
+    void testSameReferenceIsEqual() {
+        Fraction a = FractionGenerator.getInstance().createFraction(3, 5);
+        Fraction b = a;
+
+        assertEquals(a, b);
+    }
 }

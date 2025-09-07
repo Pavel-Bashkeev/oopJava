@@ -1,8 +1,10 @@
 package ru.bashkeev.city;
 
+import java.util.Objects;
+
 public class Route {
     City destination;
-    int cost;
+    int  cost;
 
     public Route(City destination, int cost) {
         this.destination = destination;
@@ -22,6 +24,19 @@ public class Route {
             throw new IllegalArgumentException("Стоимость должна быть положительной");
         }
         this.cost = cost;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Route other = (Route) obj;
+        return cost == other.cost && Objects.equals(destination, other.destination);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(destination, cost);
     }
 
     @Override

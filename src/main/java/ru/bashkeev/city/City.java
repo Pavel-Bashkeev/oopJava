@@ -3,11 +3,11 @@ package ru.bashkeev.city;
 import java.util.*;
 
 public class City {
-    String name;
-    List<Route> routes;
+    private String      name;
+    private List<Route> routes;
 
     public City(String name, List<Route> routes) {
-        this.name = name;
+        this.name   = name;
         this.routes = new ArrayList<>(routes);
     }
 
@@ -47,7 +47,7 @@ public class City {
     }
 
     public void removeRoute(City city) {
-        routes.removeIf(route -> route.destination.equals(city));
+        routes.removeIf(route -> route.getDestination().equals(city));
     }
 
     @Override
@@ -62,22 +62,11 @@ public class City {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof City other)) return false;
-        return getDestinationNames().equals(other.getDestinationNames());
+        return Objects.equals(name, other.name) && routes.equals(other.routes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDestinationNames());
-    }
-
-    private Set<String> getDestinationNames() {
-        Set<String> names = new HashSet<>();
-        for (Route route : routes) {
-            City destination = route.getDestination();
-            if (destination != null) {
-                names.add(destination.getName());
-            }
-        }
-        return names;
+        return Objects.hash(name, routes);
     }
 }
