@@ -11,7 +11,7 @@ class LineTest {
     void testLineCreation() {
         Point p1 = PointFactory.getInstance().createPoint(1, 3);
         Point p2 = PointFactory.getInstance().createPoint(23, 8);
-        Line line = new Line(p1, p2);
+        Line<Point> line = new Line<>(p1, p2);
 
         assertEquals("Линия от {1;3} до {23;8}", line.toString());
     }
@@ -20,17 +20,17 @@ class LineTest {
     void testHorizontalLine() {
         Point p1 = PointFactory.getInstance().createPoint(5, 10);
         Point p2 = PointFactory.getInstance().createPoint(25, 10);
-        Line line = new Line(p1, p2);
+        Line<Point> line = new Line<>(p1, p2);
 
         assertEquals("Линия от {5;10} до {25;10}", line.toString());
     }
 
     @Test
     void testDependentLine() {
-        Line line1 = new Line(PointFactory.getInstance().createPoint(1, 3), PointFactory.getInstance().createPoint(23, 8));
-        Line line2 = new Line(PointFactory.getInstance().createPoint(5, 10), PointFactory.getInstance().createPoint(25, 10));
+        Line<Point>line1 = new Line<>(PointFactory.getInstance().createPoint(1, 3), PointFactory.getInstance().createPoint(23, 8));
+        Line<Point>line2 = new Line<>(PointFactory.getInstance().createPoint(5, 10), PointFactory.getInstance().createPoint(25, 10));
 
-        Line line3 = new Line(line1, line2);
+        Line<Point>line3 = new Line<>(line1, line2);
         assertEquals("Линия от {1;3} до {25;10}", line3.toString());
 
         line1.setStartPointDependent(PointFactory.getInstance().createPoint(2, 4));
@@ -42,9 +42,9 @@ class LineTest {
 
     @Test
     void testIndependentChange() {
-        Line line1 = new Line(PointFactory.getInstance().createPoint(1, 3), PointFactory.getInstance().createPoint(23, 8));
-        Line line2 = new Line(PointFactory.getInstance().createPoint(5, 10), PointFactory.getInstance().createPoint(25, 10));
-        Line line3 = new Line(line1, line2);
+        Line<Point>line1 = new Line<>(PointFactory.getInstance().createPoint(1, 3), PointFactory.getInstance().createPoint(23, 8));
+        Line<Point>line2 = new Line<>(PointFactory.getInstance().createPoint(5, 10), PointFactory.getInstance().createPoint(25, 10));
+        Line<Point>line3 = new Line<>(line1, line2);
 
         line1.setStartPoint(PointFactory.getInstance().createPoint(10, 20));
         line2.setEndPoint(PointFactory.getInstance().createPoint(10, 20));
@@ -56,7 +56,7 @@ class LineTest {
 
     @Test
     void testLengthCalculation() {
-        Line line = new Line(PointFactory.getInstance().createPoint(1, 1), PointFactory.getInstance().createPoint(10, 15));
+        Line<Point>line = new Line<>(PointFactory.getInstance().createPoint(1, 1), PointFactory.getInstance().createPoint(10, 15));
         assertEquals(16.7, line.getLength());
     }
 

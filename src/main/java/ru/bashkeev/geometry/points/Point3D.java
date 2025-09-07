@@ -37,14 +37,19 @@ public final class Point3D extends Point {
 
     @Override
     public double distanceTo(Point other) {
+        double distance;
+
         if (other instanceof Point3D other3D) {
             double dx = other3D.getX() - this.getX();
             double dy = other3D.getY() - this.getY();
             double dz = other3D.z - this.z;
-            return Math.sqrt(dx * dx + dy * dy + dz * dz);
+            distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        } else {
+            double dx = other.getX() - this.getX();
+            double dy = other.getY() - this.getY();
+            distance = Math.sqrt(dx * dx + dy * dy);
         }
-        double dx = other.getX() - this.getX();
-        double dy = other.getY() - this.getY();
-        return Math.sqrt(dx * dx + dy * dy);
+
+        return Math.ceil(distance * 10) / 10;
     }
 }
