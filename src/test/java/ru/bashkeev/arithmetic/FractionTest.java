@@ -157,6 +157,10 @@ class FractionTest {
         Fraction a = FractionGenerator.getInstance().createFraction(1, 2);
         Fraction b = FractionGenerator.getInstance().createFraction(2, 4);
 
+        System.out.println(a.hashCode());
+        System.out.println(b.hashCode());
+        
+        assertTrue(a == b, "Дроби 1/2 и 2/4 должны быть равны");
         assertEquals(a, b, "Дроби 1/2 и 2/4 должны быть равны");
         assertEquals(a.hashCode(), b.hashCode(), "Хэши равных дробей должны совпадать");
     }

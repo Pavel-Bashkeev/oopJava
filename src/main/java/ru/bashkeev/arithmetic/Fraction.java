@@ -10,23 +10,15 @@ public final class Fraction extends Number {
         if (denominator == 0) {
             throw new ArithmeticException("Знаменатель не может быть 0");
         }
-
         if (denominator < 0) {
-            numerator = -numerator;
-            denominator = -denominator;
+            throw new IllegalArgumentException("Знаменатель должен быть положительным после приведения");
         }
-
-        int nod = nod(Math.abs(numerator), Math.abs(denominator));
-        this.numerator = numerator / nod;
-        this.denominator = denominator / nod;
+        this.numerator = numerator;
+        this.denominator = denominator;
     }
 
     Fraction(int wholeNumber) {
         this(wholeNumber, 1);
-    }
-
-    private static int nod(int a, int b) {
-        return b == 0 ? a : nod(b, a % b);
     }
 
     @Override
