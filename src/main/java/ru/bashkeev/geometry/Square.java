@@ -3,6 +3,7 @@ package ru.bashkeev.geometry;
 import ru.bashkeev.geometry.line.BrokenLine;
 import ru.bashkeev.geometry.points.Point;
 import ru.bashkeev.geometry.interfaces.PolylineProvider;
+import ru.bashkeev.geometry.points.PointFactory;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Square implements PolylineProvider {
 
     public Square(Point startPointTopLeft, double lengthOfSide) {
         validateLength(lengthOfSide);
-        this.startPointTopLeft = new Point(startPointTopLeft.getX(), startPointTopLeft.getY());
+        this.startPointTopLeft = PointFactory.getInstance().createPoint(startPointTopLeft.getX(), startPointTopLeft.getY());
         this.lengthOfSide = lengthOfSide;
     }
 
@@ -21,11 +22,11 @@ public class Square implements PolylineProvider {
     }
 
     public Square(int x, int y, double lengthOfSide) {
-        this(new Point(x, y), lengthOfSide);
+        this(PointFactory.getInstance().createPoint(x, y), lengthOfSide);
     }
 
     public Square(int x, int y, int lengthOfSide) {
-        this(new Point(x, y), (double) lengthOfSide);
+        this(PointFactory.getInstance().createPoint(x, y), (double) lengthOfSide);
     }
 
     private void validateLength(double length) {
@@ -44,11 +45,11 @@ public class Square implements PolylineProvider {
     }
 
     public void setTopLeft(Point point) {
-        this.startPointTopLeft = new Point(point.getX(), point.getY());
+        this.startPointTopLeft = PointFactory.getInstance().createPoint(point.getX(), point.getY());
     }
 
     public void setTopLeft(int x, int y) {
-        this.startPointTopLeft = new Point(x, y);
+        this.startPointTopLeft = PointFactory.getInstance().createPoint(x, y);
     }
 
     public double getSideLength() {
@@ -56,7 +57,7 @@ public class Square implements PolylineProvider {
     }
 
     public Point getTopLeft() {
-        return new Point(startPointTopLeft.getX(), startPointTopLeft.getY());
+        return PointFactory.getInstance().createPoint(startPointTopLeft.getX(), startPointTopLeft.getY());
     }
 
     @Override
@@ -72,10 +73,10 @@ public class Square implements PolylineProvider {
         double offsetX = x + side;
         double offsetY = y - side;
 
-        Point topLeft = new Point((int)Math.round(x), (int)Math.round(y));
-        Point topRight = new Point((int)Math.round(offsetX), (int)Math.round(y));
-        Point bottomRight = new Point((int)Math.round(offsetX), (int)Math.round(offsetY));
-        Point bottomLeft = new Point((int)Math.round(x), (int)Math.round(offsetY));
+        Point topLeft = PointFactory.getInstance().createPoint((int)Math.round(x), (int)Math.round(y));
+        Point topRight = PointFactory.getInstance().createPoint((int)Math.round(offsetX), (int)Math.round(y));
+        Point bottomRight = PointFactory.getInstance().createPoint((int)Math.round(offsetX), (int)Math.round(offsetY));
+        Point bottomLeft = PointFactory.getInstance().createPoint((int)Math.round(x), (int)Math.round(offsetY));
 
         return new BrokenLine(List.of(
                 topLeft,
