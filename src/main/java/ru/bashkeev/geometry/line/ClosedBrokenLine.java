@@ -1,5 +1,6 @@
 package ru.bashkeev.geometry.line;
 
+import ru.bashkeev.geometry.interfaces.PointIterator;
 import ru.bashkeev.geometry.points.Point;
 
 import java.util.List;
@@ -16,13 +17,23 @@ public class ClosedBrokenLine extends BrokenLine {
         }
 
         Point first = points.getFirst();
-        Point last = points.getLast();
+        Point last  = points.getLast();
 
         if (!first.equals(last)) {
             points.add(first.clone());
         }
 
         return points;
+    }
+
+    @Override
+    public PointIterator iterator() {
+        return new ClosedLineIterator(this);
+    }
+
+    @Override
+    public PointIterator iterator(int startIndex) {
+        return new ClosedLineIterator(this, startIndex);
     }
 
     @Override
@@ -41,7 +52,7 @@ public class ClosedBrokenLine extends BrokenLine {
 
         if (points.size() > 2) {
             Point first = points.getFirst();
-            Point last = points.getLast();
+            Point last  = points.getLast();
             length += last.distanceTo(first);
         }
 

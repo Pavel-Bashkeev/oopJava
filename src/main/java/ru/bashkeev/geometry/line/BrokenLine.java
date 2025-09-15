@@ -1,5 +1,6 @@
 package ru.bashkeev.geometry.line;
 
+import ru.bashkeev.geometry.interfaces.PointIterator;
 import ru.bashkeev.geometry.points.Point;
 import ru.bashkeev.helpers.ArrayToString;
 import ru.bashkeev.geometry.interfaces.Measurable;
@@ -17,6 +18,14 @@ public class BrokenLine implements Measurable {
 
     public BrokenLine() {
         this(new ArrayList<>());
+    }
+
+    public PointIterator iterator() {
+        return new BrokenLineIterator(this);
+    }
+
+    public PointIterator iterator(int startIndex) {
+        return new BrokenLineIterator(this, startIndex);
     }
 
     @Override
