@@ -2,6 +2,7 @@ package ru.bashkeev.school;
 
 import ru.bashkeev.exceptions.InvalidGradeException;
 import ru.bashkeev.helpers.ArrayToString;
+import ru.bashkeev.school.interfaces.Action;
 import ru.bashkeev.school.interfaces.GradeValidator;
 
 import java.util.ArrayList;
@@ -9,9 +10,11 @@ import java.util.List;
 import java.util.Objects;
 
 public final class Student implements Comparable<Student> {
-    private String name;
+    private       String         name;
     private       List<Integer>  grades;
     private final GradeValidator gradeValidator;
+    private       List<Action>   undoOps = new ArrayList<>();
+    private int currentUndoIndex = -1;
 
     public Student(String name) {
         this(name, grade -> true, new ArrayList<>());
@@ -26,9 +29,9 @@ public final class Student implements Comparable<Student> {
     }
 
     public Student(String name, GradeValidator gradeValidator, List<Integer> grades) {
-        this.name = name;
+        this.name           = name;
         this.gradeValidator = gradeValidator;
-        this.grades = processGrades(grades);
+        this.grades         = processGrades(grades);
     }
 
     public String getName() {
@@ -36,6 +39,8 @@ public final class Student implements Comparable<Student> {
     }
 
     public void setName(String name) {
+        final String tmp = this.name;
+        addUndoAction(() -> this.name = tmp);
         this.name = name;
     }
 
@@ -44,12 +49,38 @@ public final class Student implements Comparable<Student> {
     }
 
     public void setGrades(List<Integer> grades) {
+        final List<Integer> oldGrades = new ArrayList<>(this.grades);
+        addUndoAction(() -> this.grades = new ArrayList<>(oldGrades));
         this.grades = processGrades(grades);
     }
 
     public void addGrade(int grade) {
         validateGrade(grade);
+
+        addUndoAction(() -> {
+            if (!grades.isEmpty()) {
+                grades.removeLast();
+            }
+        });
+
         this.grades.add(grade);
+    }
+
+    public void undo() {
+        if (currentUndoIndex < 0) {
+            throw new IllegalStateException("There is nothing to cancel");
+        }
+
+        undoOps.get(currentUndoIndex).act();
+        currentUndoIndex--;
+    }
+
+    private void addUndoAction(Action action) {
+        if (currentUndoIndex < undoOps.size() - 1) {
+            undoOps.subList(currentUndoIndex + 1, undoOps.size()).clear();
+        }
+        undoOps.add(action);
+        currentUndoIndex = undoOps.size() - 1;
     }
 
     private void validateGrade(Integer grade) {
@@ -120,7 +151,7 @@ public final class Student implements Comparable<Student> {
 
     @Override
     public int compareTo(Student other) {
-        double thisAvg = this.getAvgGrade();
+        double thisAvg  = this.getAvgGrade();
         double otherAvg = other.getAvgGrade();
 
         if (Math.abs(thisAvg - otherAvg) < 0.001) {
