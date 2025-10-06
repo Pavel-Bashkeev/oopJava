@@ -10,8 +10,8 @@ public class TwoProcessor {
         if (cls.isAnnotationPresent(Two.class)) {
             Two twoAnnotation = cls.getAnnotation(Two.class);
 
-            String first = twoAnnotation.first();
-            int second = twoAnnotation.second();
+            String first  = twoAnnotation.first();
+            int    second = twoAnnotation.second();
 
             System.out.println("===== Class: '" + cls.getName() + "' has @Two annotation =====");
             System.out.println("===== first field: '" + first + "' =====");
@@ -19,5 +19,7 @@ public class TwoProcessor {
         } else {
             System.out.println("===== Class: '" + cls.getName() + "' @Two annotation not found =====");
         }
+
+        System.out.println("===== @Two processor =====\n\n");
     }
 }

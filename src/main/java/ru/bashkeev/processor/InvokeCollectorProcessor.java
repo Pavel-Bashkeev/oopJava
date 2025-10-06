@@ -9,11 +9,10 @@ import java.util.Map;
 
 public class InvokeCollectorProcessor {
     public static Map<String, Object> collect(Class<?>... classes) {
+        System.out.println("===== @InvokeCollectorProcessor Collector =====");
         Map<String, Object> results = new HashMap<>();
 
         for (Class<?> cls : classes) {
-            System.out.println("===== @InvokeCollectorProcessor Collector =====");
-
             processStaticMethods(cls, results);
 
             try {
@@ -23,7 +22,7 @@ public class InvokeCollectorProcessor {
                 System.out.println("===== @InvokeCollectorProcessor Cannot create instance for " + cls.getSimpleName() + ": " + ex.getMessage() + " =====");
             }
         }
-
+        System.out.println("===== @InvokeCollectorProcessor Collector =====\n\n");
         return results;
     }
 

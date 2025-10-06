@@ -26,6 +26,7 @@ public class DefaultProcessor {
                 System.out.println("===== @Default Processor field " + field.getName() + " has " + dftValue + " =====");
             }
         }
+        System.out.println("===== @Default Processor =====\n\n\n");
     }
 
     private static Object createDftValue(Class<?> type) {

@@ -22,17 +22,14 @@ class AnnotatedPointTest {
     @Test
     @DisplayName("Should process @Two annotation correctly")
     void testTwoAnnotation() {
-        // Act & Assert - просто проверяем что не бросает исключение
         assertDoesNotThrow(() -> TwoProcessor.process(annotatedPoint));
     }
 
     @Test
     @DisplayName("Should initialize default values with @Default annotation")
     void testDefaultAnnotation() throws Exception {
-        // Act
         DefaultProcessor.process(annotatedPoint);
 
-        // Assert
         assertEquals("dft", annotatedPoint.getPointName(),
                 "Поле pointName должно быть инициализировано значением по умолчанию 'dft'");
     }
@@ -40,13 +37,11 @@ class AnnotatedPointTest {
     @Test
     @DisplayName("Should include/exclude fields in toString with @ToString annotation")
     void testToStringAnnotation() throws Exception {
-        // Arrange
-        DefaultProcessor.process(annotatedPoint); // Инициализируем значения по умолчанию
 
-        // Act
+        DefaultProcessor.process(annotatedPoint);
+
         String result = ToStringProcessor.process(annotatedPoint);
 
-        // Assert
         assertAll(
                 () -> assertTrue(result.contains("pointName=dft"),
                         "Должно содержать поле с @ToString(value = YES)"),

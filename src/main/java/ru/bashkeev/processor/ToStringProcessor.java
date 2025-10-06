@@ -39,6 +39,7 @@ public class ToStringProcessor {
         }
 
         sb.append("}");
+        System.out.println("===== @ToString Processor =====\n\n");
         return sb.toString();
     }
 }
