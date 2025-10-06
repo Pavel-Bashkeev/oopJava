@@ -2,53 +2,67 @@ package ru.bashkeev.processor;
 
 import ru.bashkeev.annotation.Validate;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ValidateProcessor {
+
     public static ValidationResult processor(Object obj) throws IllegalAccessException {
-        System.out.println("===== @Validate Processor =====");
+        System.out.println("===== @Validate Processor (with aliases) =====");
 
         ValidationResult result = new ValidationResult();
         Class<?> cls = obj.getClass();
 
-        if (cls.isAnnotationPresent(Validate.class)) {
-            Validate validateAnnotation = cls.getAnnotation(Validate.class);
-            Class<?>[] allowedTypes = validateAnnotation.value();
+        Validate validateAnnotation = findValidateAnnotation(cls);
 
-            System.out.println("===== @Validate allowedTypes " + Arrays.toString(allowedTypes) + " =====");
-
-            Field[] fields = cls.getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                try {
-                    Object value = field.get(obj);
-                    boolean typeAllowed = false;
-
-                    for (Class<?> allowedType : allowedTypes) {
-                        if (value != null && allowedType.isAssignableFrom(value.getClass())) {
-                            typeAllowed = true;
-                            break;
-                        }
-                    }
-
-                    if (!typeAllowed && value != null) {
-                        String error = "Field '" + field.getName() + "' of class '" + cls.getName() + "' has invalid value '" + value + "'";
-                        result.addError(error);
-                        System.out.println("===== @Validate allowedTypes error: " + error + " =====");
-                    } else {
-                        String error = "Field '" + field.getName() + "' of class '" + cls.getName() + "' has valid value '" + value + "'";
-                    }
-                } catch (IllegalAccessException e) {
-                    result.addError("Field access error: " + e.getMessage());
-                }
-            }
-        } else {
-            result.addError("===== Class: '" + cls.getName() + "' @Validate annotation not found =====");
+        if (validateAnnotation == null) {
+            String error = "Class: '" + cls.getName() + "' @Validate annotation or its alias not found";
+            result.addError(error);
+            System.out.println("===== " + error + " =====");
+            return result;
         }
-        
+
+        Class<?>[] allowedTypes = validateAnnotation.value();
+        System.out.println("===== @Validate allowedTypes " + Arrays.toString(allowedTypes) + " =====");
+
+        Field[] fields = cls.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                Object value = field.get(obj);
+                boolean typeAllowed = false;
+
+                if (value == null) {
+                    System.out.println("===== Field '" + field.getName() + "' is null - skipping validation =====");
+                    continue;
+                }
+
+                for (Class<?> allowedType : allowedTypes) {
+                    if (allowedType.isAssignableFrom(value.getClass())) {
+                        typeAllowed = true;
+                        break;
+                    }
+                }
+
+                if (!typeAllowed) {
+                    String error = "Field '" + field.getName() + "' has invalid type '" +
+                            value.getClass().getSimpleName() + "' (value: " + value + ")";
+                    result.addError(error);
+                    System.out.println("===== Validation error: " + error + " =====");
+                } else {
+                    System.out.println("===== Field '" + field.getName() + "' is valid: " + value + " =====");
+                }
+
+            } catch (IllegalAccessException e) {
+                String error = "Field access error for '" + field.getName() + "': " + e.getMessage();
+                result.addError(error);
+                System.out.println("===== " + error + " =====");
+            }
+        }
+        System.out.println("===== @Validate Processor (with aliases) end =====\n\n");
         return result;
     }
 
@@ -66,5 +80,29 @@ public class ValidateProcessor {
         public List<String> getErrors() {
             return errors;
         }
+
+        @Override
+        public String toString() {
+            return "ValidationResult{valid=" + isValid() + ", errors=" + errors + "}";
+        }
+    }
+
+    private static Validate findValidateAnnotation(Class<?> cls) {
+        if (cls.isAnnotationPresent(Validate.class)) {
+            System.out.println("===== Found direct @Validate annotation =====");
+            return cls.getAnnotation(Validate.class);
+        }
+
+        Annotation[] annotations = cls.getAnnotations();
+        for (Annotation annotation : annotations) {
+            Class<? extends Annotation> annotationType = annotation.annotationType();
+
+            if (annotationType.isAnnotationPresent(Validate.class)) {
+                System.out.println("===== Found alias annotation: " + annotationType.getSimpleName() + " =====");
+                return annotationType.getAnnotation(Validate.class);
+            }
+        }
+
+        return null;
     }
 }
