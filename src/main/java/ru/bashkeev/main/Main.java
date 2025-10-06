@@ -1,50 +1,54 @@
 package ru.bashkeev.main;
 
-import ru.bashkeev.geometry.points.Point;
-import ru.bashkeev.geometry.points.PointFactory;
-import ru.bashkeev.utils.ValidationUtils;
-import ru.bashkeev.validator.PointValidator;
+import ru.bashkeev.test.TestExample;
+import ru.bashkeev.utils.TestRunner;
+
+import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Демонстрация валидации точек ===");
+        Map<TestRunner.ResultType, List<TestRunner.TestResult>> results =
+                TestRunner.run(TestExample.class, List.of());
 
-        PointFactory factory    = PointFactory.getInstance();
-        Point        validPoint = factory.createPoint(5, 10);
+        printSimpleStatistics(results);
+    }
 
-        System.out.println("\n1. Валидация корректной точки:");
-        try {
-            ValidationUtils.validate(validPoint, PointValidator.class);
-            System.out.println("+ Точка прошла валидацию");
-        } catch (ValidationUtils.ValidateException e) {
-            System.out.println("❌ " + e.getMessage());
+    private static void printSimpleStatistics(Map<TestRunner.ResultType, List<TestRunner.TestResult>> results) {
+        int passed = results.get(TestRunner.ResultType.PASS).size();
+        int failed = results.get(TestRunner.ResultType.FAILED).size();
+        int errors = results.get(TestRunner.ResultType.ERROR).size();
+        int disabled = results.get(TestRunner.ResultType.DISABLED).size();
+        int total = passed + failed + errors + disabled;
+
+        System.out.println("=== РЕЗУЛЬТАТЫ ТЕСТИРОВАНИЯ ===");
+        System.out.println("Всего тестов: " + total);
+        System.out.println("Пройдено: " + passed);
+        System.out.println("Провалено: " + failed);
+        System.out.println("Ошибок: " + errors);
+        System.out.println("Отключено: " + disabled);
+
+        // Выводим список проваленных тестов
+        if (failed > 0) {
+            System.out.println("\nПроваленные тесты:");
+            results.get(TestRunner.ResultType.FAILED).forEach(test ->
+                    System.out.println("  - " + test.name() + ": " + test.t().getMessage())
+            );
         }
 
-        System.out.println("\n2. Валидация фабрики:");
-        try {
-            ValidationUtils.validate(factory, PointValidator.class);
-            System.out.println("+ Фабрика прошла валидацию");
-        } catch (ValidationUtils.ValidateException e) {
-            System.out.println("❌ " + e.getMessage());
+        // Выводим список тестов с ошибками
+        if (errors > 0) {
+            System.out.println("\nТесты с ошибками:");
+            results.get(TestRunner.ResultType.ERROR).forEach(test ->
+                    System.out.println("  - " + test.name() + ": " + test.t().getMessage())
+            );
         }
 
-        Point invalidPoint1 = factory.createPoint(0, 0);
-        Point invalidPoint2 = factory.createPoint(20000, 10);
-
-        System.out.println("\n3. Валидация точки в начале координат:");
-        try {
-            ValidationUtils.validate(invalidPoint1, PointValidator.class);
-            System.out.println("+ Точка прошла валидацию");
-        } catch (ValidationUtils.ValidateException e) {
-            System.out.println("❌ " + e.getMessage());
-        }
-
-        System.out.println("\n4. Валидация точки с большой координатой:");
-        try {
-            ValidationUtils.validate(invalidPoint2, PointValidator.class);
-            System.out.println("+ Точка прошла валидацию");
-        } catch (ValidationUtils.ValidateException e) {
-            System.out.println("❌ " + e.getMessage());
+        // Итоговый статус
+        if (failed == 0 && errors == 0) {
+            System.out.println("\n✅ ВСЕ ТЕСТЫ ПРОЙДЕНЫ УСПЕШНО!");
+        } else {
+            System.out.println("\n❌ ЕСТЬ ПРОБЛЕМЫ В ТЕСТАХ!");
         }
     }
 }
