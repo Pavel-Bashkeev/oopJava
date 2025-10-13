@@ -1,4 +1,4 @@
-package ru.bashkeev.exceptions;
+package ru.bashkeev.exception;
 
 public class AlreadyClosedException extends RuntimeException {
     public AlreadyClosedException() {

@@ -1,7 +1,7 @@
 package ru.bashkeev.network;
 
-import ru.bashkeev.exceptions.AlreadyClosedException;
-import ru.bashkeev.exceptions.ConnectionLostException;
+import ru.bashkeev.exception.AlreadyClosedException;
+import ru.bashkeev.exception.ConnectionLostException;
 
 import java.util.Random;
 

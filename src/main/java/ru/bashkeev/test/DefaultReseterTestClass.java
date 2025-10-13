@@ -2,19 +2,19 @@ package ru.bashkeev.test;
 
 import ru.bashkeev.annotation.Default;
 
-@Default(String.class)
+@Default(type = String.class)
 public class DefaultReseterTestClass {
 
-    @Default(String.class)
+    @Default(type = String.class)
     private String annotatedString;
 
-    @Default(Integer.class)
+    @Default(type = Integer.class)
     private Integer annotatedInteger;
 
-    @Default(Boolean.class)
+    @Default(type = Boolean.class)
     private Boolean annotatedBoolean;
 
-    @Default(Double.class)
+    @Default(type = Double.class)
     private Double annotatedDouble;
 
     private int primitiveInt;

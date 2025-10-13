@@ -1,6 +1,6 @@
 package ru.bashkeev.network;
 
-import ru.bashkeev.exceptions.ConnectionLostException;
+import ru.bashkeev.exception.ConnectionLostException;
 
 public class DataReader {
 
