@@ -7,9 +7,9 @@ import ru.bashkeev.geometry.points.PointFactory;
 @Two(first = "GeometryPoint", second = 2)
 @Cache({"points", "geometry"})
 @Validate({String.class, Integer.class, Double.class, Point.class})
-public class AnnotatedPoint {
+public class AnnotatedPoint implements GeometryService {
 
-    @Default(String.class)
+    @Default(type = String.class)
     private String pointName;
 
     @ToString(value = ToString.Value.YES)
@@ -33,15 +33,18 @@ public class AnnotatedPoint {
     }
 
     @Invoke
+    @Override
     public void initializePoint() {
         System.out.println("Point initialized at coordinates: (" + x + ", " + y + ")");
     }
 
     @Invoke
+    @Override
     public String getPointInfo() {
         return "Point info: (" + x + ", " + y + "), name: " + pointName;
     }
 
+    @Override
     public double distanceTo(AnnotatedPoint other) {
         return point.distanceTo(other.point);
     }

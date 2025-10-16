@@ -1,6 +1,5 @@
 package ru.bashkeev.test;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,85 +7,125 @@ import static org.junit.jupiter.api.Assertions.*;
 import ru.bashkeev.processor.CacheProcessor;
 
 class CacheProcessorTest {
-
-    @BeforeEach
-    void setUp() {
-        CacheProcessor.clearCache();
-    }
-
     @Test
     @DisplayName("Тест 1: Должен кэшировать все методы когда @Cache без параметров")
-    void testCacheAllMethods() throws Exception {
-        CacheAllMethodsClass obj = new CacheAllMethodsClass();
-        CacheProcessor.cache(obj);
+    void testCacheAllMethods() {
+        CacheAllMethodsClass original = new CacheAllMethodsClass();
+        CacheableService cachedService = CacheProcessor.cache(original);
 
-        String result1 = (String) CacheProcessor.executeWithCache(obj, "getAllData");
+        // Используем прокси как обычный объект
+        String result1 = cachedService.getAllData();
         assertEquals("All data, call count: 1", result1);
-        assertEquals(1, obj.getCallCount());
+        assertEquals(1, original.getCallCount());
 
-        String result2 = (String) CacheProcessor.executeWithCache(obj, "getAllData");
+        String result2 = cachedService.getAllData(); // Должен быть из кэша
         assertEquals("All data, call count: 1", result2);
-        assertEquals(1, obj.getCallCount());
+        assertEquals(1, original.getCallCount()); // Счетчик не увеличился!
 
-        String result3 = (String) CacheProcessor.executeWithCache(obj, "getSpecificData", "test");
+        String result3 = cachedService.getSpecificData("test");
         assertEquals("Specific data: test, call count: 2", result3);
 
-        String result4 = (String) CacheProcessor.executeWithCache(obj, "getSpecificData", "test");
+        String result4 = cachedService.getSpecificData("test"); // Из кэша
         assertEquals("Specific data: test, call count: 2", result4);
-
-        assertTrue(CacheProcessor.getCacheSize() >= 2, "В кэше должно быть минимум 2 записи");
+        assertEquals(2, original.getCallCount()); // Счетчик не увеличился!
     }
 
     @Test
     @DisplayName("Тест 2: Должен кэшировать только указанные методы когда @Cache с параметрами")
-    void testCacheSpecificMethods() throws Exception {
-        CacheSpecificMethodsClass obj = new CacheSpecificMethodsClass();
-        CacheProcessor.cache(obj);
+    void testCacheSpecificMethods() {
+        CacheSpecificMethodsClass original = new CacheSpecificMethodsClass();
+        UserService cachedService = CacheProcessor.cache(original);
 
-        String userResult1 = (String) CacheProcessor.executeWithCache(obj, "getUserInfo", "user123");
+        // Эти методы должны кэшироваться
+        String userResult1 = cachedService.getUserInfo("user123");
         assertEquals("User info for user123, calls: 1", userResult1);
 
-        String userResult2 = (String) CacheProcessor.executeWithCache(obj, "getUserInfo", "user123");
+        String userResult2 = cachedService.getUserInfo("user123"); // Из кэша
         assertEquals("User info for user123, calls: 1", userResult2);
-        assertEquals(1, obj.getUserCallCount());
+        assertEquals(1, original.getUserCallCount()); // Счетчик не увеличился
 
-        String settingsResult1 = (String) CacheProcessor.executeWithCache(obj, "getSettings", "general");
+        String settingsResult1 = cachedService.getSettings("general");
         assertEquals("Settings for general, calls: 1", settingsResult1);
 
-        String settingsResult2 = (String) CacheProcessor.executeWithCache(obj, "getSettings", "general");
-        assertEquals("Settings for general, calls: 1", settingsResult2);  // Из кэша!
-        assertEquals(1, obj.getSettingsCallCount());  // Счетчик не увеличился!
+        String settingsResult2 = cachedService.getSettings("general"); // Из кэша
+        assertEquals("Settings for general, calls: 1", settingsResult2);
+        assertEquals(1, original.getSettingsCallCount()); // Счетчик не увеличился
 
-        String otherResult1 = (String) CacheProcessor.executeWithCache(obj, "getOtherData");
+        // Этот метод НЕ должен кэшироваться
+        String otherResult1 = cachedService.getOtherData();
         assertEquals("Other data, calls: 1", otherResult1);
 
-        String otherResult2 = (String) CacheProcessor.executeWithCache(obj, "getOtherData");
+        String otherResult2 = cachedService.getOtherData(); // НЕ из кэша
         assertEquals("Other data, calls: 2", otherResult2);
-        assertEquals(2, obj.getOtherCallCount());
+        assertEquals(2, original.getOtherCallCount()); // Счетчик увеличился!
     }
 
     @Test
     @DisplayName("Тест 3: Должен работать с множественными объектами и игнорировать без @Cache")
-    void testMultipleObjectsAndNoCache() throws Exception {
-        CacheAllMethodsClass cachedObj = new CacheAllMethodsClass();
-        CacheSpecificMethodsClass specificObj = new CacheSpecificMethodsClass();
-        NoCacheClass noCacheObj = new NoCacheClass();
+    void testMultipleObjectsAndNoCache() {
+        CacheAllMethodsClass cachedOriginal = new CacheAllMethodsClass();
+        CacheSpecificMethodsClass specificOriginal = new CacheSpecificMethodsClass();
+        NoCacheClass noCacheOriginal = new NoCacheClass();
 
-        CacheProcessor.cache(cachedObj, specificObj, noCacheObj);
+        // Создаем прокси для объектов с @Cache
+        CacheableService cachedObj = CacheProcessor.cache(cachedOriginal);
+        UserService specificObj = CacheProcessor.cache(specificOriginal);
 
-        String result1 = (String) CacheProcessor.executeWithCache(cachedObj, "getAllData");
-        String result2 = (String) CacheProcessor.executeWithCache(cachedObj, "getAllData");
+        // Объект без @Cache возвращается как есть
+        NoCacheClass noCacheObj = CacheProcessor.cache(noCacheOriginal);
+
+        // Проверяем кэширование для объекта с @Cache
+        String result1 = cachedObj.getAllData();
+        String result2 = cachedObj.getAllData(); // Из кэша
         assertEquals(result1, result2);
-        assertEquals(1, cachedObj.getCallCount());
+        assertEquals(1, cachedOriginal.getCallCount());
 
-        String user1 = (String) CacheProcessor.executeWithCache(specificObj, "getUserInfo", "test");
-        String user2 = (String) CacheProcessor.executeWithCache(specificObj, "getUserInfo", "test");
+        // Проверяем кэширование для объекта с конкретными методами
+        String user1 = specificObj.getUserInfo("test");
+        String user2 = specificObj.getUserInfo("test"); // Из кэша
         assertEquals(user1, user2);
-        assertEquals(1, specificObj.getUserCallCount());
+        assertEquals(1, specificOriginal.getUserCallCount());
 
-        String data1 = (String) CacheProcessor.executeWithCache(noCacheObj, "getData");
-        String data2 = (String) CacheProcessor.executeWithCache(noCacheObj, "getData");
+        // Проверяем что объект без @Cache не кэшируется
+        String data1 = noCacheObj.getData();
+        String data2 = noCacheObj.getData(); // НЕ из кэша
         assertNotEquals(data1, data2);
-        assertEquals(2, noCacheObj.getCallCount());
+        assertEquals(2, noCacheOriginal.getCallCount());
+    }
+
+    @Test
+    @DisplayName("Тест 4: Должен корректно обрабатывать методы Object")
+    void testObjectMethods() {
+        CacheAllMethodsClass original = new CacheAllMethodsClass();
+        CacheableService cachedService = CacheProcessor.cache(original);
+
+        // toString() и hashCode() работают
+        assertEquals(original.toString(), cachedService.toString());
+        assertEquals(original.hashCode(), cachedService.hashCode());
+
+        // equals() хотя бы не падает
+        assertDoesNotThrow(() -> cachedService.equals(cachedService));
+        assertDoesNotThrow(() -> cachedService.equals(original));
+        assertDoesNotThrow(() -> original.equals(cachedService));
+
+        // Дополнительная проверка - методы действительно кэшируются
+        String result1 = cachedService.getAllData();
+        String result2 = cachedService.getAllData();
+        assertEquals(result1, result2); // Из кэша
+    }
+
+    @Test
+    @DisplayName("Тест 5: Должен различать разные параметры")
+    void testDifferentParameters() {
+        CacheAllMethodsClass original = new CacheAllMethodsClass();
+        CacheableService cachedService = CacheProcessor.cache(original);
+
+        String result1 = cachedService.getSpecificData("param1");
+        String result2 = cachedService.getSpecificData("param2"); // Другой параметр
+        String result3 = cachedService.getSpecificData("param1"); // Тот же параметр - из кэша
+
+        assertNotEquals(result1, result2);
+        assertEquals(result1, result3);
+        assertEquals(2, original.getCallCount()); // Вызвалось только 2 раза, третий из кэша
     }
 }

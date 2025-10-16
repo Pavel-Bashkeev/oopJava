@@ -3,89 +3,116 @@ package ru.bashkeev.processor;
 import ru.bashkeev.annotation.Default;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultResetter {
+    private static final Map<Class<?>, DefaultValueStrategy> STRATEGIES = new ConcurrentHashMap<>();
+
+    static {
+        STRATEGIES.put(int.class, ctx -> 0);
+        STRATEGIES.put(double.class, ctx -> 0.0);
+        STRATEGIES.put(boolean.class, ctx -> false);
+        STRATEGIES.put(long.class, ctx -> 0L);
+        STRATEGIES.put(float.class, ctx -> 0.0f);
+        STRATEGIES.put(char.class, ctx -> '\0');
+        STRATEGIES.put(byte.class, ctx -> (byte) 0);
+        STRATEGIES.put(short.class, ctx -> (short) 0);
+
+        STRATEGIES.put(Integer.class, ctx -> 0);
+        STRATEGIES.put(Boolean.class, ctx -> false);
+        STRATEGIES.put(Double.class, ctx -> 0.0);
+        STRATEGIES.put(Long.class, ctx -> 0L);
+        STRATEGIES.put(Float.class, ctx -> 0.0f);
+        STRATEGIES.put(Character.class, ctx -> '\0');
+        STRATEGIES.put(Byte.class, ctx -> (byte) 0);
+        STRATEGIES.put(Short.class, ctx -> (short) 0);
+
+        STRATEGIES.put(String.class, ctx -> "default");
+    }
+
+    @FunctionalInterface
+    private interface DefaultValueStrategy {
+        Object createDefault(Context context);
+    }
+
+    private static class Context {
+        private final Class<?> targetType;
+        private final Default annotation;
+
+        public Context(Class<?> targetType, Default annotation) {
+            this.targetType = targetType;
+            this.annotation = annotation;
+        }
+
+        public Class<?> getTargetType() {
+            return targetType;
+        }
+
+        public Default getAnnotation() {
+            return annotation;
+        }
+    }
+
     public static void reset(Object... objs) {
         System.out.println("===== @DefaultResetter Processor started =====");
-        for (Object obj : objs) {
-            resetObjectDefaults(obj);
-        }
+        Arrays.stream(objs).forEach(DefaultResetter::resetObjectDefaults);
         System.out.println("===== @DefaultResetter Processor end =====\n\n");
     }
 
     private static void resetObjectDefaults(Object obj) {
-        Class<?> cls = obj.getClass();
+        getAllFields(obj.getClass())
+                .forEach(field -> resetField(obj, field));
+    }
 
-        boolean  classHasDefault = cls.isAnnotationPresent(Default.class);
-        Class<?> clsDefaultType  = classHasDefault ? cls.getAnnotation(Default.class).value() : null;
+    private static void resetField(Object obj, Field field) {
+        try {
+            field.setAccessible(true);
 
-        List<Field> fields = getAllFields(cls);
+            Object newValue = determineNewValue(field, obj.getClass());
 
-        for (Field field : fields) {
-            try {
-                field.setAccessible(true);
-
-                if (field.isAnnotationPresent(Default.class)) {
-                    Default fieldAnnotation = field.getAnnotation(Default.class);
-                    Object  defaultValue    = createDefaultValue(fieldAnnotation.value());
-                    field.set(obj, defaultValue);
-                    System.out.println("===== @DefaultResetter Processor field " + field.getName() + " set to: " + defaultValue + " =====");
-                } else if (classHasDefault && !field.isAnnotationPresent(Default.class)) {
-                    Object defaultValue = createDefaultValue(clsDefaultType);
-                    field.set(obj, defaultValue);
-                    System.out.println("===== @DefaultResetter Processor field " + field.getName() + " set to class default: " + defaultValue + " =====");
-                } else if (!field.isAnnotationPresent(Default.class)) {
-                    Object defaultNativeValue = getNativeDefaultValue(field.getType());
-                    if (defaultNativeValue != null) {
-                        field.set(obj, defaultNativeValue);
-                        System.out.println("===== @DefaultResetter Processor field " + field.getName() + " set to class default: " + defaultNativeValue + " =====");
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("===== @DefaultResetter Processor Failed to reset field '" + field.getName() + "': " + e.getMessage() + " =====");
+            if (newValue != null) {
+                field.set(obj, newValue);
+                System.out.println("===== @DefaultResetter Processor field " + field.getName() +
+                        " set to: " + newValue + " =====");
             }
+
+        } catch (Exception e) {
+            System.out.println("===== @DefaultResetter Processor Failed to reset field '" +
+                    field.getName() + "': " + e.getMessage() + " =====");
         }
+    }
+
+    private static Object determineNewValue(Field field, Class<?> objClass) {
+        if (field.isAnnotationPresent(Default.class)) {
+            return getValueForType(field.getType());
+        }
+
+        if (shouldResetField(field)) {
+            return getValueForType(field.getType());
+        }
+
+        return null;
+    }
+
+    private static boolean shouldResetField(Field field) {
+        return field.getType().isPrimitive() || field.getType() == String.class;
+    }
+
+    private static Object getValueForType(Class<?> fieldType) {
+        DefaultValueStrategy strategy = STRATEGIES.get(fieldType);
+        return strategy != null ? strategy.createDefault(new Context(fieldType, null)) : null;
     }
 
     private static List<Field> getAllFields(Class<?> cls) {
         List<Field> fields = new ArrayList<>();
-        while (cls != null) {
-            fields.addAll(Arrays.asList(cls.getDeclaredFields()));
-            cls = cls.getSuperclass();
+        Class<?> currentClass = cls;
+
+        while (currentClass != null && currentClass != Object.class) {
+            fields.addAll(Arrays.asList(currentClass.getDeclaredFields()));
+            currentClass = currentClass.getSuperclass();
         }
+
         return fields;
-    }
-
-    private static Object createDefaultValue(Class<?> type) {
-        if (type == String.class) return "default";
-        if (type == Integer.class || type == int.class) return 0;
-        if (type == Double.class || type == double.class) return 0.0;
-        if (type == Boolean.class || type == boolean.class) return false;
-        if (type == Long.class || type == long.class) return 0L;
-        if (type == Float.class || type == float.class) return 0.0f;
-        try {
-            return type.getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private static Object getNativeDefaultValue(Class<?> type) {
-        if (!type.isPrimitive() && type != String.class) return null;
-
-        if (type == int.class) return 0;
-        if (type == double.class) return 0.0;
-        if (type == boolean.class) return false;
-        if (type == long.class) return 0L;
-        if (type == float.class) return 0.0f;
-        if (type == char.class) return '\0';
-        if (type == byte.class) return (byte) 0;
-        if (type == short.class) return (short) 0;
-        if (type == String.class) return null;
-
-        return null;
     }
 }

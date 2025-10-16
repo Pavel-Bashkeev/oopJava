@@ -71,11 +71,10 @@ class AnnotatedPointTest {
     @DisplayName("Should cache method results with @Cache annotation")
     void testCacheAnnotation() throws Exception {
         AnnotatedPoint otherPoint = new AnnotatedPoint(0, 0);
+        GeometryService cachedPoint = CacheProcessor.cache(otherPoint);
 
-        double firstCall = (Double) CacheProcessor.executeWithCache(
-                annotatedPoint, "distanceTo", otherPoint);
-        double secondCall = (Double) CacheProcessor.executeWithCache(
-                annotatedPoint, "distanceTo", otherPoint);
+        double firstCall = cachedPoint.distanceTo(otherPoint);
+        double secondCall = cachedPoint.distanceTo(otherPoint);
 
         assertEquals(firstCall, secondCall, 0.001,
                 "Повторный вызов должен возвращать закэшированное значение");
@@ -84,14 +83,15 @@ class AnnotatedPointTest {
     @Test
     @DisplayName("Should cache different parameters separately")
     void testCacheWithDifferentParameters() throws Exception {
+        AnnotatedPoint original = new AnnotatedPoint(3, 4);
+        GeometryService cachedPoint = CacheProcessor.cache(original);
+
         AnnotatedPoint point1 = new AnnotatedPoint(0, 0);
         AnnotatedPoint point2 = new AnnotatedPoint(10, 10);
 
-        // Act
-        double distance1 = (Double) CacheProcessor.executeWithCache(
-                annotatedPoint, "distanceTo", point1);
-        double distance2 = (Double) CacheProcessor.executeWithCache(
-                annotatedPoint, "distanceTo", point2);
+        double distance1 = cachedPoint.distanceTo(point1);
+        double distance2 = cachedPoint.distanceTo(point2);
+        double distance3 = cachedPoint.distanceTo(point1);
 
         assertNotEquals(distance1, distance2, 0.001,
                 "Разные параметры должны давать разные результаты");

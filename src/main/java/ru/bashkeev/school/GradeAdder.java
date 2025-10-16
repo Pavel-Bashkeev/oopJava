@@ -1,6 +1,6 @@
 package ru.bashkeev.school;
 
-import ru.bashkeev.exceptions.InvalidGradeException;
+import ru.bashkeev.exception.InvalidGradeException;
 import java.util.List;
 import java.util.Random;
 

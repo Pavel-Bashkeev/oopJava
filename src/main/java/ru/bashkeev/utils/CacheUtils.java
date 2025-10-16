@@ -12,85 +12,76 @@ public class CacheUtils {
             throw new IllegalArgumentException("Target object cannot be null");
         }
 
-        Class<?> targetClass = target.getClass();
-
-        if (targetClass.isInterface()) {
-            return (T) Proxy.newProxyInstance(
-                    targetClass.getClassLoader(),
-                    new Class<?>[]{targetClass},
-                    new CachingInvocationHandler(target)
-            );
-        } else {
-            return (T) Proxy.newProxyInstance(
-                    targetClass.getClassLoader(),
-                    getAllPublicMethods(targetClass),
-                    new CachingInvocationHandler(target)
-            );
-        }
+        return (T) Proxy.newProxyInstance(
+                target.getClass().getClassLoader(),
+                getAllInterfaces(target.getClass()),
+                new CachingInvocationHandler(target)
+        );
     }
 
-    private static Class<?>[] getAllPublicMethods(Class<?> clazz) {
+    private static Class<?>[] getAllInterfaces(Class<?> clazz) {
         Set<Class<?>> interfaces = new HashSet<>();
-        getAllInterfaces(clazz, interfaces);
+        Class<?>      current    = clazz;
+
+        while (current != null && current != Object.class) {
+            Collections.addAll(interfaces, current.getInterfaces());
+            current = current.getSuperclass();
+        }
+
         return interfaces.toArray(new Class<?>[0]);
     }
 
-    private static void getAllInterfaces(Class<?> clazz, Set<Class<?>> interfaces) {
-        if (clazz == null || clazz == Object.class) {
-            return;
-        }
-
-        Collections.addAll(interfaces, clazz.getInterfaces());
-
-        getAllInterfaces(clazz.getSuperclass(), interfaces);
-    }
-
     private static class CachingInvocationHandler implements InvocationHandler {
-        private final Object target;
-        private final Map<Method, CacheEntry> cache = new ConcurrentHashMap<>();
-        private volatile long lastStateCheck;
-        private volatile int stateHash;
+        private final Object                     target;
+        private final Map<MethodKey, CacheEntry> cache                  = new ConcurrentHashMap<>();
+        private final Set<String>                stateModifyingPrefixes = Set.of("set", "add", "remove", "put", "delete");
+        private final Set<String>                stateModifyingMethods  = Set.of("clear");
 
         public CachingInvocationHandler(Object target) {
             this.target = target;
-            this.stateHash = computeStateHash();
-            this.lastStateCheck = System.currentTimeMillis();
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if (method.getDeclaringClass() == Object.class) {
+                return handleObjectMethod(proxy, method, args);
+            }
+
             if (!shouldCache(method, args)) {
                 return method.invoke(target, args);
             }
 
-            if (hasStateChanged()) {
-                cache.clear();
-                stateHash = computeStateHash();
-                lastStateCheck = System.currentTimeMillis();
-            }
+            MethodKey key = new MethodKey(method, args);
 
-            CacheEntry cached = cache.get(method);
+            CacheEntry cached = cache.get(key);
             if (cached != null) {
                 return cached.value;
             }
 
             Object result = method.invoke(target, args);
-            cache.put(method, new CacheEntry(result));
+            cache.put(key, new CacheEntry(result));
 
             return result;
         }
 
-        private boolean shouldCache(Method method, Object[] args) {
-            if (args != null && args.length > 0) {
-                return false;
-            }
+        private Object handleObjectMethod(Object proxy, Method method, Object[] args) {
+            String methodName = method.getName();
+            return switch (methodName) {
+                case "toString" -> "CachedProxy@" + Integer.toHexString(System.identityHashCode(proxy)) +
+                        "[" + target.toString() + "]";
+                case "hashCode" -> System.identityHashCode(proxy);
+                case "equals" -> proxy == args[0];
+                default -> throw new UnsupportedOperationException("Object method not supported: " + methodName);
+            };
+        }
 
-            if (method.getDeclaringClass() == Object.class &&
-                    !method.getName().equals("toString")) {
+        private boolean shouldCache(Method method, Object[] args) {
+            if (method.getReturnType() == void.class) {
                 return false;
             }
 
             if (isStateModifyingMethod(method)) {
+                cache.clear();
                 return false;
             }
 
@@ -99,50 +90,71 @@ public class CacheUtils {
 
         private boolean isStateModifyingMethod(Method method) {
             String methodName = method.getName();
-            return methodName.startsWith("set") ||
-                    methodName.startsWith("add") ||
-                    methodName.startsWith("remove") ||
-                    methodName.startsWith("put") ||
-                    methodName.startsWith("delete") ||
-                    methodName.equals("clear");
-        }
 
-        private boolean hasStateChanged() {
-            return computeStateHash() != stateHash;
-        }
-
-        private int computeStateHash() {
-            try {
-                int hash = 17;
-                Class<?> clazz = target.getClass();
-
-                while (clazz != null && clazz != Object.class) {
-                    for (Field field : clazz.getDeclaredFields()) {
-                        if (Modifier.isStatic(field.getModifiers()) ||
-                                Modifier.isFinal(field.getModifiers())) {
-                            continue;
-                        }
-
-                        field.setAccessible(true);
-                        Object value = field.get(target);
-                        hash = 31 * hash + (value != null ? value.hashCode() : 0);
-                    }
-                    clazz = clazz.getSuperclass();
+            for (String prefix : stateModifyingPrefixes) {
+                if (methodName.startsWith(prefix)) {
+                    return true;
                 }
-
-                return hash;
-            } catch (IllegalAccessException e) {
-                return System.identityHashCode(target);
             }
+
+            return stateModifyingMethods.contains(methodName);
+        }
+    }
+
+    private static class MethodKey {
+        private final Method   method;
+        private final Object[] args;
+        private final int      hashCode;
+
+        public MethodKey(Method method, Object[] args) {
+            this.method   = method;
+            this.args     = args != null ? args.clone() : null;
+            this.hashCode = computeHashCode();
+        }
+
+        private int computeHashCode() {
+            int result = method.hashCode();
+            if (args != null) {
+                for (Object arg : args) {
+                    result = 31 * result + (arg != null ? arg.hashCode() : 0);
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof MethodKey)) return false;
+
+            MethodKey that = (MethodKey) o;
+            if (!method.equals(that.method)) return false;
+
+            if (args == null) return that.args == null;
+            if (that.args == null) return false;
+            if (args.length != that.args.length) return false;
+
+            for (int i = 0; i < args.length; i++) {
+                if (!Objects.equals(args[i], that.args[i])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return hashCode;
         }
     }
 
     private static class CacheEntry {
         final Object value;
-        final long timestamp;
+        final long   timestamp;
 
         CacheEntry(Object value) {
-            this.value = value;
+            this.value     = value;
             this.timestamp = System.currentTimeMillis();
         }
     }

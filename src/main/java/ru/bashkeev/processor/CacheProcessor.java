@@ -2,120 +2,95 @@ package ru.bashkeev.processor;
 
 import ru.bashkeev.annotation.Cache;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CacheProcessor {
-    private static final Map<String, Object> cache = new HashMap<>();
 
-    public static void cache(Object... objects) {
-        System.out.println("=== @Cache Setup Processor ===");
+    @SuppressWarnings("unchecked")
+    public static <T> T cache(T target) {
+        if (target == null) {
+            throw new IllegalArgumentException("Target object cannot be null");
+        }
 
-        for (Object obj : objects) {
-            Class<?> cls = obj.getClass();
+        Class<?> targetClass = target.getClass();
 
-            if (!cls.isAnnotationPresent(Cache.class)) {
-                System.out.println("=== Class '" + cls.getSimpleName() + "' has no @Cache annotation - skipping ===");
-                continue;
+        if (!targetClass.isAnnotationPresent(Cache.class)) {
+            return target;
+        }
+
+        return (T) Proxy.newProxyInstance(
+                targetClass.getClassLoader(),
+                targetClass.getInterfaces(),
+                new CachingInvocationHandler(target)
+        );
+    }
+
+    private static class CachingInvocationHandler implements InvocationHandler {
+        private final Object target;
+        private final Map<String, Object> cache = new ConcurrentHashMap<>();
+        private final Cache cacheAnnotation;
+        private final String[] cachedMethods;
+
+        public CachingInvocationHandler(Object target) {
+            this.target = target;
+            this.cacheAnnotation = target.getClass().getAnnotation(Cache.class);
+            this.cachedMethods = cacheAnnotation.value();
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            // Методы Object не кэшируем, сразу делегируем
+            if (method.getDeclaringClass() == Object.class) {
+                return method.invoke(target, args);
             }
 
-            Cache    cacheAnnotation = cls.getAnnotation(Cache.class);
-            String[] cachedMethods   = cacheAnnotation.value();
+            // Проверяем, нужно ли кэшировать этот метод
+            if (!shouldCacheMethod(method.getName())) {
+                return method.invoke(target, args);
+            }
 
-            System.out.println("=== Setting up cache for class: " + cls.getSimpleName() + " ===");
-            System.out.println("=== Cached methods: " +
-                    (cachedMethods.length == 0 ? "ALL" : Arrays.toString(cachedMethods)) + " ===");
-        }
-        System.out.println();
-    }
+            // Создаем ключ кэша
+            String cacheKey = createCacheKey(method.getName(), args);
 
-    public static Object executeWithCache(Object obj, String methodName, Object... params)
-            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        System.out.println("=== @Cache Execution Processor ===");
-        Class<?> cls = obj.getClass();
+            // Если есть в кэше - возвращаем из кэша
+            if (cache.containsKey(cacheKey)) {
+                System.out.println("=== Cache HIT for " + method.getName() + " ===");
+                return cache.get(cacheKey);
+            }
 
-        if (!cls.isAnnotationPresent(Cache.class)) {
-            Method method = findMethod(cls, methodName, params);
-            System.out.println("=== No @Cache annotation - executing without cache ===");
-            return method.invoke(obj, params);
-        }
-
-        Cache    cacheAnnotation = cls.getAnnotation(Cache.class);
-        String[] cachedMethods   = cacheAnnotation.value();
-
-        if (!shouldCacheMethod(methodName, cachedMethods)) {
-            Method method = findMethod(cls, methodName, params);
-            System.out.println("=== Method '" + methodName + "' is not in cached list - executing without cache ===");
-            return method.invoke(obj, params);
+            // Иначе вызываем и кэшируем результат
+            System.out.println("=== Cache MISS for " + method.getName() + " ===");
+            Object result = method.invoke(target, args);
+            cache.put(cacheKey, result);
+            return result;
         }
 
-        String cacheKey = createCacheKey(obj, methodName, params);
-        System.out.println("=== Cache key: '" + cacheKey + "' ===");
-        System.out.println("=== Cached methods config: " +
-                (cachedMethods.length == 0 ? "ALL" : Arrays.toString(cachedMethods)) + " ===");
-
-        if (cache.containsKey(cacheKey)) {
-            System.out.println("=== Cache HIT for method '" + methodName + "' ===");
-            return cache.get(cacheKey);
+        private boolean shouldCacheMethod(String methodName) {
+            if (cachedMethods.length == 0) {
+                return true;
+            }
+            return Arrays.asList(cachedMethods).contains(methodName);
         }
 
-        System.out.println("=== Cache MISS - executing method '" + methodName + "' ===");
-        Method method = findMethod(cls, methodName, params);
-        Object result = method.invoke(obj, params);
-        cache.put(cacheKey, result);
-        System.out.println("=== Result saved in cache ===");
+        private String createCacheKey(String methodName, Object[] args) {
+            StringBuilder key = new StringBuilder();
+            key.append(methodName);
 
-        return result;
-    }
+            if (args != null && args.length > 0) {
+                key.append("(");
+                for (int i = 0; i < args.length; i++) {
+                    if (i > 0) key.append(",");
+                    key.append(args[i] != null ? args[i].toString() : "null");
+                }
+                key.append(")");
+            }
 
-    private static boolean shouldCacheMethod(String methodName, String[] cachedMethods) {
-        if (cachedMethods.length == 0) {
-            return true;
+            return key.toString();
         }
-
-        return Arrays.asList(cachedMethods).contains(methodName);
-    }
-
-    private static Method findMethod(Class<?> cls, String methodName, Object... params)
-            throws NoSuchMethodException {
-        Class<?>[] paramTypes = new Class[params.length];
-        for (int i = 0; i < params.length; i++) {
-            paramTypes[i] = params[i].getClass();
-        }
-        return cls.getMethod(methodName, paramTypes);
-    }
-
-    private static String createCacheKey(Object obj, String methodName, Object[] params) {
-        StringBuilder key = new StringBuilder();
-        key.append(obj.getClass().getSimpleName())
-                .append(".")
-                .append(methodName)
-                .append("(");
-
-        for (int i = 0; i < params.length; i++) {
-            if (i > 0) key.append(",");
-            key.append(params[i]);
-        }
-        key.append(")");
-
-        return key.toString();
-    }
-
-
-    public static void clearCache() {
-        cache.clear();
-        System.out.println("=== Cache cleared ===");
-    }
-
-    public static void printCacheStats() {
-        System.out.println("=== Cache Statistics ===");
-        System.out.println("=== Total entries: " + cache.size() + " ===");
-        cache.forEach((key, value) ->
-                System.out.println("=== " + key + " -> " + value + " ==="));
-    }
-
-    public static int getCacheSize() {
-        return cache.size();
     }
 }

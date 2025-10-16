@@ -1,6 +1,6 @@
 package ru.bashkeev.school;
 
-import ru.bashkeev.exceptions.InvalidGradeException;
+import ru.bashkeev.exception.InvalidGradeException;
 import ru.bashkeev.helpers.ArrayToString;
 import ru.bashkeev.school.interfaces.Action;
 import ru.bashkeev.school.interfaces.GradeValidator;
